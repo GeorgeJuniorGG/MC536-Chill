@@ -11,4 +11,4 @@ Um estudo sobre as mídias disponíveis em plataformas de streaming selecionadas
 > <p> Com isso, pode-se responder a perguntas como quais filmes possuem as melhores (ou piores) avaliações, quanto tempo uma obra demora para ser lançada em uma dessas plataformas, entre outras. No entanto, devido a uma maior disponibilidade de dados sobre o conteúdo da Netflix e da Disney+, o projeto apresentará uma maior quantidade de informações sobre estas plataformas.
 
 ## Slides da Apresentação
-> [Apresentação](/assets/slides/Proposta de Projeto.pdf)
+> [MC536 & CHILL](assets/slides/Proposta_de_Projeto.pdf)
