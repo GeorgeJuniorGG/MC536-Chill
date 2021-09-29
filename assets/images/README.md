@@ -1,1 +1,1 @@
-arquivo de imagens para esta etapa (se houver)
+## arquivo de imagens para esta etapa (se houver)
