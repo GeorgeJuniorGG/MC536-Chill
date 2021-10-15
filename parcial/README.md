@@ -1,4 +1,4 @@
-_como a equipe esqueceu de criar a pasta 'parcial' na semana devida, foi pedido ao professor que olhasse as datas de criação dos arquivos e pastas dentro da mesma_
+_como a equipe esqueceu de criar a pasta 'parcial' na semana devida, foi pedido ao professor que olhasse as datas de criação dos arquivos e pastas dentro da mesma no histórico de versões (commits realizados no dia 29 de setembro de 2021)_
 
 # Projeto `MC536-Chill`
 
