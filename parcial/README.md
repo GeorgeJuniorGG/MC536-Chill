@@ -1,3 +1,5 @@
+_como a equipe esqueceu de criar a pasta 'parcial' na semana devida, foi pedido ao professor que olhasse as datas de criação dos arquivos e pastas dentro da mesma_
+
 # Projeto `MC536-Chill`
 
 # Equipe `MC536 & Chill` - `Chill`
