@@ -4,9 +4,12 @@
 * `George Gigilas Junior` - `216741`
 
 ## Modelo Lógico Combinado do Banco de Dados de Grafos
-> ![grafo modelo logico](images/grafo_modelo_logico.png)
->
-> ![Modelo Lógico de Grafos](images/modelo-logico-grafos.png)
+> ![Grafo modelo logico](images/grafo_modelo_logico.png)
+> _Figura 1: Grafo do modelo lógico_
+> ![Grafo projecao midia](images/grafo_projecao_midia.png)
+> _Figura 2: Grafo da projeção com relação a participação das pessoas nas mídias_
+> ![Grafo projecao genero](images/grafo-projecao-genero.png)
+> _Figura 3: Grafo da projeção com relação ao gênero das obras trabalhadas por cada pessoa_
 
 ## Perguntas de Pesquisa/Análise Combinadas e Respectivas Análises
 
