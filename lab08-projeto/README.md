@@ -36,11 +36,11 @@
 >   * Para responder esta pergunta, podemos fazer uma análise da modalidade predição de links que, com base nas conexões do grafo da Figura 2, atribui um valor de 0 a 1 que indica a probabilidade de essas pessoas trabalharem juntas no futuro. 
 
 ### Pergunta/Análise 2
-> * Como podemos mapear a flexibilidade de atores e diretores quanto ao gênero da obra trablhada?
+> * Como podemos mapear a flexibilidade de atores e diretores quanto ao gênero da obra trabalhada?
 >   
->   * Para responder esta pergunta, podemos fazer uma análise da modalidade centralidade com relação ao "betweenness" a partir do grafo da Figura 3. Com ele, podemos avaliar o valor do betweenness de cada pessoa e observar a formação de comunidades e das conexões entre elas. 
+>   * Para responder esta pergunta, podemos fazer uma análise de formação de comunidade a partir do grafo da Figura 3. Com ele, podemos avaliar quais atores/diretores tendem a participar mais de obras de um determinado gênero a partir das comunidades formadas.
 
 ### Pergunta/Análise 3
-> * Quanto a morte ou aposentadoria de um ator ou diretor impacta na produção de novos filmes e séries?
+> * Quais atores/diretores são mais populares no meio cinematográfico?
 >   
->   * Para responder esta pergunta, podemos fazer uma análise da modalidade vulnerabilidade, a partir do grafo da Figura 2. Com ele, podemos analisar qual o impacto no grafo quando uma pessoa (ator ou diretor) é removida, a partir do índice visto em aula.
+>   * Para responder esta pergunta, podemos fazer uma análise de centralidade a partir do grafo da Figura 2. Com ele, podemos criar um sistema que atribui um valor para cada pessoa com base no número de ligações com outras pessoas que essa pessoa possui. Além disso, podemos aplicar um peso ponderado para ligações com pessoas mais populares. A partir disso, poderemos atribuir um valor de popularidade para cada pessoa e ver quem são os atores/diretores mais centrais.
