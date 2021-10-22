@@ -5,16 +5,27 @@
 
 ## Modelo Lógico Combinado do Banco de Dados de Grafos
 > ![Grafo modelo logico](images/grafo_modelo_logico.png)
+> <center>
 > 
 > _Figura 1: Grafo do modelo lógico_
 > 
+> </center>
+> 
 > ![Grafo projecao midia](images/grafo_projecao_midia.png)
+> 
+> <center>
 > 
 > _Figura 2: Grafo da projeção com relação a participação das pessoas nas mídias_
 > 
+> </center>
+> 
 > ![Grafo projecao genero](images/grafo-projecao-genero.png)
 > 
-> _Figura 3: Grafo da projeção com relação ao gênero das obras trabalhadas por cada pessoa_
+> <center>
+> 
+> _Figura 3: Grafo da projeção que liga atores e diretores com relação ao gênero das obras trabalhadas_
+> 
+> </center>
 
 ## Perguntas de Pesquisa/Análise Combinadas e Respectivas Análises
 
