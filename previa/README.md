@@ -62,7 +62,7 @@ título da base | link | breve descrição
 
 ## Operações realizadas para a construção do dataset
 
-> [Link para o arquivo do notebook](notebook/DatasetBuilder.ipynb) que executa as operações de construção do dataset:
+> [Link para o arquivo do notebook](notebooks/DatasetBuilder.ipynb) que executa as operações de construção do dataset:
 * Extração de dados dos datasets encontrados.
 * Transformação dos atributos de gênero, país, atores e diretores para comporem outras tabelas.
 * Tratamento de dados para remoção de filmes/séries repetidos entre os datasets encontrados.
