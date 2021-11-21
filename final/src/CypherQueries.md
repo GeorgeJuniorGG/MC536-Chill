@@ -19,12 +19,12 @@ RETURN b, COLLECT(c) as atores
 ORDER BY SIZE(atores) DESC LIMIT 1
 ```
 
-## Retornando elementos que estão há 2 arestas de distância de Alba Flores
+## Retornando elementos que estão até 2 arestas de distância de Alba Flores
 ```cypher
 MATCH (p:Ator {Ator: 'Alba Flores'})-[*1..2]-(hollywood) return DISTINCT p, hollywood
 ```
 
-## Retornando atores que estão há 2 arestas de distância de Mark Hamill
+## Retornando atores que já co-atuaram com Mark Hamill
 ```cypher
 MATCH c=(p:Ator {Ator: 'Mark Hamill'})-[:CoAtuou]-(q:Ator) return c
 ```
