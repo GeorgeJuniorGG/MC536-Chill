@@ -41,14 +41,14 @@ Disney Plus(_título_, _data de lançamento_, data de lançamento na plataforma)
 
 título do arquivo/base | link | breve descrição
 ----- | ----- | -----
-`Filmes` | [Link](data/processed/filmesNew.csv) | `Arquivo contendo dados sobre filmes`
-`Séries` | [Link](data/processed/seriesNew.csv) | `Arquivo contendo dados sobre séries`
+`Filmes` | [Link](data/processed/filmes.csv) | `Arquivo contendo dados sobre filmes`
+`Séries` | [Link](data/processed/series.csv) | `Arquivo contendo dados sobre séries`
 `Netflix` | [Link](data/processed/netflix.csv) | `Arquivo contendo data de lançamento para filmes e séries da Netflix`
 `DisneyPlus` | [Link](data/processed/disneyplus.csv) | `Arquivo contendo data de lançamento para filmes e séries da Disney+`
-`Atores` | [Link](data/processed/atoresNew.csv) | `Arquivo contendo atores e filmes/séries em que trabalharam`
-`Diretores` | [Link](data/processed/diretoresNew.csv) | `Arquivo contendo diretores e filmes em que trabalharam`
-`Escritores` | [Link](data/processed/escritoresNew.csv) | `Arquivo contendo escritores e séries em que trabalharam`
-`Gêneros` | [Link](data/processed/generosNew.csv) | `Arquivo contendo filmes/séries e seus respectivos gêneros`
+`Atores` | [Link](data/processed/atores.csv) | `Arquivo contendo atores e filmes/séries em que trabalharam`
+`Diretores` | [Link](data/processed/diretores.csv) | `Arquivo contendo diretores e filmes em que trabalharam`
+`Criadores` | [Link](data/processed/criadores.csv) | `Arquivo contendo criadores e séries em que trabalharam`
+`Gêneros` | [Link](data/processed/generos.csv) | `Arquivo contendo filmes/séries e seus respectivos gêneros`
 `Países` | [Link](data/processed/paises.csv) | `Arquivo contendo filmes/séries e seus respectivos países de produção`
 
 ## Bases de Dados
@@ -74,11 +74,62 @@ plt.show();
 
 > Para o preparo do dataset para o modelo relacional, começamos a construir nossas tabelas a partir dos datasets encontrados. Foi necessário realizar operações de extração dos datasets que pegamos como base, integração de dados desses datasets e tratamento de dados para mantermos tudo em um só padrão. Também é importante destacarmos que transformamos atributos multivalorados em tabelas separadas, para garantirmos uma normalização no modelo relacional.
 > 
->  A partir disso, utilizamos a API TMDb para coletarmos dados que estavam faltando no nosso dataset (estavam nulos ou vazios). CRISTIANO.
+>  A partir disso, iniciamos a etapa de tratamento e agregação de dados. Utilizando o pacote para python [IMDbPY](https://imdbpy.readthedocs.io/en/latest/) conseguirmos acessar a API do IMDb para coletarmos dados que estavam faltando no nosso dataset (estavam nulos ou vazios). Na primeira etapa completamos os dados das tabelas filmes e séries, usando o nome e o ano de lançamento era possível recuperar o id que o IMDb atribuiu aquela obra e então obter seus dados completos. Após realizar essa etapa a tabela de filmes passou de 1,7MB para 3,9MB, enquanto que a de series passou de 0,91MB para 1,7MB. Foi notado principalmento o complemento de dados como duração, número de temporadas(somente para séries), classificação indicativa, avalização do IMDb e enredo. Vale resaltar que essa etapa foi uma das mais demoradas, levando em consideração o tempo necessário para cada requisição e quantidade de obras tratadas.
+> Prosseguindo com a agregação de dados, as tabelas normalizadas foram tratadas em conjunto, após recuperar todos os dados de uma determinada obra era verificado se algum dos 15 primeiros atores já estava presente na tabela de atores, aqueles que não estivessem eram adicionados em uma tabela de atores intermediaria, o mesmo era feito para gêneros e diretores. 
+~~~python
+def addNewCast(title,year,cast):
+    oldCast = getOldCast(title, year)
+    try:
+        for person in cast:
+            if (person not in oldCast):
+                row = [title, year, person]
+                with open('data/new/atores2.0.csv','a') as newCast: 
+                    writerNewCast=csv.writer(newCast)
+                    writerNewCast.writerow(row)
+    except:
+        print("Falha ao escrever no CSV")
+~~~
+~~~python
+#Percorre mídias recuperando suas informações e agregando dados as tabelas normalizadas
+for i in range(len(movies)):
+    mediaId = getMediaId(movies['Titulo'][i],movies['Ano'][i])
+    if(mediaId):
+        dataMovie = getDataMovie(mediaId)
+        try:
+            addNewCast(movies['Titulo'][i],str(movies['Ano'][i]),dataMovie["cast"])
+~~~
+> Em especial, não conseguimos obter os dados de diretores para séries, então optamos por criar uma tabela de criadores. Ainda, algumas tabelas não passaram por essa etapa por falta de fontes ou mesmo de tempo hábio para trabalhar sobre seus dados. Durante esse processo exercitamos o uso de tratamento de exceções em python, após as primeiras execuções percebemos a necessidade de aplicar esse princípio devido ao tempo de execução do programa e a variedade de erros possíveis.
+> Com a agregação realizada, algumas rotinas simples foram realizadas para homogenizar os dados, como:
+> * Séries que apresentavam um intervalo de anos passaram a apresentar somente o ano de lançamento
+> * Classificações indicativas no formato americano foram convertidas para o formato brasileiro 
+> 
+> Outros tratamentos foram mais complexos, a agregação de dados gerou certa inconsistência nos anos de lançamento, algumas obras apresentavam uma diferença de um ano nessa informação. Ordenando as tabelas provenientes da normalização em ordem alfabetica, era possível verificar se havia alguma diferença nos anos de determinado titulo e validar essa informação usando as tabelas principais (filmes, series). Sem essa etapa não seria possível realizar o join entre as tabelas, uma vez que nossa chave primária e o nome da obra juntamente com o ano de lançamento.
+> Para finalizar essa etapa, foi feita uma verificação final, procurando por tuplas repetidas ou que possuiam informações nulas.
+~~~python
+#Recupe as posições que possui algum campo especifico nulo
+for i in range(len(director)):
+    if(not director['Diretor'][i] or director["Diretor"][i]==''):
+        deleteIndex.append(i)
+
+#Exclui tuplas que possuem nulos
+data = director.drop(labels=deleteIndex, axis=0)
+
+~~~
+> A tabela a seguir mostra o resultado da etapa de agregação e tratamento de dados
+> 
+Tabela | Tamanho Original (em MB) | Tamanho Final (em MB)
+----- | ----- | -----
+`Filmes` | 1,7 | 4,0
+`Séries` | 0,9 | 1,6
+`Atores` | 2,6 |  8,1
+`Diretores` | 0,7 | 0,6
+`Criadores` | 0,0 | 0,3
+`Gêneros` | 1,5 | 1,8
+> _A tabela de diretores sofreu uma redução pois todas as séries apresentavam o campo de diretor nulo, essas linhas foram removidas na etapa anterior_  
 > 
 > Para o modelo de grafos, fizemos duas versões: uma para os arquivos antes do preenchimento de dados faltantes (que serve como um recorte) e outra para os arquivos finais. Ambos requeriram construir novas tabelas para facilitar a análise no Neo4j. Exemplos de tabelas foram: tabelas que expressam a relação entre o título e gênero/ator/diretor, tabelas que contêm apenas atores, diretores e títulos, modificação do título para estar no formato título (ano), e quebra da tabela de título e atores porque o Neo4j não carregava a tabela inteira (possivelmente por ser muito grande e demorar muito tempo para processar).
 > 
-> Para as análises do modelo relacional, utilizamos o beaker X para rodarmos códigos em SQL no jupyter. Já para o modelo de grafos, fizemos comandos em cypher para rodarmos na versão de desktop do Neo4j.
+> Para as análises do modelo relacional, utilizamos o beaker X e h2 para rodarmos códigos em SQL no jupyter. Já para o modelo de grafos, fizemos comandos em cypher para rodarmos na versão de desktop do Neo4j.
 
 > Coloque um link para o arquivo do notebook, programas ou workflows que executam as operações que você apresentar.
 > 
@@ -94,6 +145,7 @@ plt.show();
 > * Tratamento de dados para remoção de filmes/séries repetidos entre os datasets encontrados.
 > * Integração de dados dos datasets encontrados.
 > * Tratamento de dados faltante a partir da agregação de dados fragmentados obtidos pela API TMDb.
+> * Tratamento de dados após a agregação
 > * Transformação de dados na criação de tabelas para faciliar a criação dos grafos no Neo4j.
 
 ## Evolução do Projeto
