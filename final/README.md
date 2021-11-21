@@ -505,7 +505,7 @@ SELECT AVG(Avaliacao) FROM allOthers;
 > A primeira imagem corresponde à execução da query em um grafo que contém menos dados (recorte). Já a segunda imagem corresponde ao grafo que contém as informações completas.
 
 #### Pergunta/Análise 9
-> * Quais elementos estão há 2 arestas de distância de Alba Flores?
+> * Quais elementos estão até 2 arestas de distância de Alba Flores?
 > ```cypher
 > MATCH (p:Ator {Ator: 'Alba Flores'})-[*1..2]-(hollywood) return DISTINCT p, hollywood
 > ```
@@ -514,12 +514,12 @@ SELECT AVG(Avaliacao) FROM allOthers;
 >
 > A primeira imagem corresponde à execução da query em um grafo que contém menos dados (recorte). Já a segunda imagem corresponde ao grafo que contém as informações completas.
 #### Pergunta/Análise 10
-> * Quais atores estão há 2 arestas de distância de Mark Hamill?
+> * Quais atores já co-atuaram com Mark Hamill?
 > ```cypher
 > MATCH c=(p:Ator {Ator: 'Mark Hamill'})-[:CoAtuou]-(q:Ator) return c
 > ```
-> ![Atores há duas arestas de distância de Mark Hamill](assets/MarkHamill1.png)
-> ![Atores há duas arestas de distância de Mark Hamill](assets/MarkHamill2.png)
+> ![Atores que ja co atuaram com Mark Hamill](assets/MarkHamill1.png)
+> ![Atores que ja co atuaram com Mark Hamill](assets/MarkHamill2.png)
 >
 > A primeira imagem corresponde à execução da query em um grafo que contém menos dados (recorte). Já a segunda imagem corresponde ao grafo que contém as informações completas.
 ### Perguntas/Análise Propostas mas Não Implementadas
