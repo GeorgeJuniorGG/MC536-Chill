@@ -13,11 +13,11 @@
 ## Slides da Apresentação
 > [Slides](slides/previa.pdf)
 
-## Modelo Conceitual Preliminar
+## Modelo Conceitual
 
 > ![Modelo Conceitual](assets/modeloconceitual.png)
 
-## Modelos Lógicos Preliminares
+## Modelos Lógicos
 
 > Modelo lógico relacional
 ~~~
@@ -37,18 +37,19 @@ Disney Plus(_título_, _data de lançamento_, data de lançamento na plataforma)
 > Modelo de grafos de propriedades
 ![Modelo de Grafos](assets/modelografo.png)
 
-## Dataset Preliminar a ser Publicado
+## Dataset Publicado
 
 título do arquivo/base | link | breve descrição
 ----- | ----- | -----
-`Filmes` | [Link](data/interim/filmes.csv) | `Arquivo contendo dados sobre filmes`
-`Séries` | [Link](data/interim/series.csv) | `Arquivo contendo dados sobre séries`
-`Netflix` | [Link](data/interim/netflix.csv) | `Arquivo contendo data de lançamento para filmes e séries da Netflix`
-`DisneyPlus` | [Link](data/interim/disneyplus.csv) | `Arquivo contendo data de lançamento para filmes e séries da Disney+`
-`Atores` | [Link](data/interim/atores.csv) | `Arquivo contendo atores e filmes/séries em que trabalharam`
-`Diretores` | [Link](data/interim/diretores.csv) | `Arquivo contendo diretores e filmes/séries em que trabalharam`
-`Gêneros` | [Link](data/interim/generos.csv) | `Arquivo contendo filmes/séries e seus respectivos gêneros`
-`Países` | [Link](data/interim/paises.csv) | `Arquivo contendo filmes/séries e seus respectivos países de produção`
+`Filmes` | [Link](data/processed/filmesNew.csv) | `Arquivo contendo dados sobre filmes`
+`Séries` | [Link](data/processed/seriesNew.csv) | `Arquivo contendo dados sobre séries`
+`Netflix` | [Link](data/processed/netflix.csv) | `Arquivo contendo data de lançamento para filmes e séries da Netflix`
+`DisneyPlus` | [Link](data/processed/disneyplus.csv) | `Arquivo contendo data de lançamento para filmes e séries da Disney+`
+`Atores` | [Link](data/processed/atoresNew.csv) | `Arquivo contendo atores e filmes/séries em que trabalharam`
+`Diretores` | [Link](data/processed/diretoresNew.csv) | `Arquivo contendo diretores e filmes em que trabalharam`
+`Escritores` | [Link](data/processed/escritoresNew.csv) | `Arquivo contendo escritores e séries em que trabalharam`
+`Gêneros` | [Link](data/processed/generosNew.csv) | `Arquivo contendo filmes/séries e seus respectivos gêneros`
+`Países` | [Link](data/processed/paises.csv) | `Arquivo contendo filmes/séries e seus respectivos países de produção`
 
 ## Bases de Dados
 
@@ -60,18 +61,70 @@ título da base | link | breve descrição
 `Netflix Movies and TV Shows` | [Link](https://www.kaggle.com/shivamb/netflix-shows) | `Base de dados para filmes e séries da Netflix`
 `IMDb` | [Link](https://www.imdb.com/) | `Base de dados para filmes e séries em geral`
 
-## Operações realizadas para a construção do dataset
+## Detalhamento do Projeto
+> Apresente aqui detalhes do processo de construção do dataset e análise. Nesta seção ou na seção de Perguntas podem aparecer destaques de código como indicado a seguir. Note que foi usada uma técnica de highlight de código, que envolve colocar o nome da linguagem na abertura de um trecho com `~~~`, tal como `~~~python`.
+> Os destaques de código devem ser trechos pequenos de poucas linhas, que estejam diretamente ligados a alguma explicação. Não utilize trechos extensos de código. Se algum código funcionar online (tal como um Jupyter Notebook), aqui pode haver links. No caso do Jupyter, preferencialmente para o Binder abrindo diretamente o notebook em questão.
 
-> [Link para o arquivo do notebook](notebooks/DatasetBuilder.ipynb) que executa as operações de construção do dataset:
-* Extração de dados dos datasets encontrados.
-* Transformação dos atributos de gênero, país, atores e diretores para comporem outras tabelas.
-* Tratamento de dados para remoção de filmes/séries repetidos entre os datasets encontrados.
-* Integração de dados dos datasets encontrados.
+~~~python
+df = pd.read_excel("/content/drive/My Drive/Colab Notebooks/dataset.xlsx");
+sns.set(color_codes=True);
+sns.distplot(df.Hemoglobin);
+plt.show();
+~~~
 
+> Para o preparo do dataset para o modelo relacional, começamos a construir nossas tabelas a partir dos datasets encontrados. Foi necessário realizar operações de extração dos datasets que pegamos como base, integração de dados desses datasets e tratamento de dados para mantermos tudo em um só padrão. Também é importante destacarmos que transformamos atributos multivalorados em tabelas separadas, para garantirmos uma normalização no modelo relacional.
+> 
+>  A partir disso, utilizamos a API TMDb para coletarmos dados que estavam faltando no nosso dataset (estavam nulos ou vazios). CRISTIANO.
+> 
+> Para o modelo de grafos, fizemos duas versões: uma para os arquivos antes do preenchimento de dados faltantes (que serve como um recorte) e outra para os arquivos finais. Ambos requeriram construir novas tabelas para facilitar a análise no Neo4j. Exemplos de tabelas foram: tabelas que expressam a relação entre o título e gênero/ator/diretor, tabelas que contêm apenas atores, diretores e títulos, modificação do título para estar no formato título (ano), e quebra da tabela de título e atores porque o Neo4j não carregava a tabela inteira (possivelmente por ser muito grande e demorar muito tempo para processar).
+> 
+> Para as análises do modelo relacional, utilizamos o beaker X para rodarmos códigos em SQL no jupyter. Já para o modelo de grafos, fizemos comandos em cypher para rodarmos na versão de desktop do Neo4j.
+
+> Coloque um link para o arquivo do notebook, programas ou workflows que executam as operações que você apresentar.
+> 
+> [Notebook para construção da versão inicial dos arquivos csv.](notebooks/DatasetBuilder.ipynb)
+> [Programa para tratamento de dados faltantes.](src/addTvShowData.py)
+> [Notebook para construção do grafo.](notebook/GraphDatasetBuilder.ipynb)
+> [Notebook para construção do grafo menor.](notebooks/SmallerGraphDatasetBuilder.ipynb)
+> _Os comandos em cypher estão em markdown dentro dos notebooks de construção dos grafos._
+
+> Aqui devem ser apresentadas as operações de construção do dataset:
+> * Extração de dados dos datasets encontrados.
+> * Transformação dos atributos de gênero, país, atores e diretores para comporem outras tabelas.
+> * Tratamento de dados para remoção de filmes/séries repetidos entre os datasets encontrados.
+> * Integração de dados dos datasets encontrados.
+> * Tratamento de dados faltante a partir da agregação de dados fragmentados obtidos pela API TMDb.
+> * Transformação de dados na criação de tabelas para faciliar a criação dos grafos no Neo4j.
+
+## Evolução do Projeto
+> Relatório de evolução, descrevendo as evoluções na modelagem do projeto, dificuldades enfrentadas, mudanças de rumo, melhorias e lições aprendidas. Referências aos diagramas, modelos e recortes de mudanças são bem-vindos.
+> 
+> Podem ser apresentados destaques na evolução dos modelos conceitual e lógico. O modelo inicial e intermediários (quando relevantes) e explicação de refinamentos, mudanças ou evolução do projeto que fundamentaram as decisões.
+> 
+> Relatar o processo para se alcançar os resultados é tão importante quanto os resultados.
+
+> Como primeiro desafio, tivemos a integração de dados de várias fontes. Percebemos que fontes diferentes não seguem um padrão, o que dificulta muito a integração. Por exemplo, o ano de lançamento das séries da Netflix correspondiam ao ano de lançamento da última temporada, enquanto o ano da Disney + correspondia o intervalo no qual a séries lançava episódios. Por sua vez, a tabela de séries apresentava o ano de lançamento do primeiro episódio. Após várias etapas de tratamento, conseguimos nossa primeira versão do dataset. É importante mencionar que fizemos alguns ajustes nos modelos iniciais conceitual e relacional, de acordo com o que fomos notando.
+> 
+> Após isso, percebemos que atores famosos apareciam poucas vezes na tabela, e percebemos que estavam faltando dados de muitos filmes. Foi então que começamos o processo de tratamento de dados faltante a partir de uma API, o que demorou muito para ser finalizado. CRISTIANO
+> 
+> Resolvido o modelo relacional, conseguimos ter os arquivos finais prontos, e partimos para o modelo de grafos. Inicialmente, começamos o processo com os dados incompletos, por serem menos dados. Tivemos algumas dificuldades pois já eram muitos dados, mas conseguimos construir o grafo e realizar algumas queries. Também fizemos projeções a partir da criação de novas arestas (como a aresta "CoAtuou") para analisarmos grafos homogêneos e para poderem ser respondidas perguntas mais complexas.
+> 
+> Então, partimos para o grafo completo, o que foi muito difícil. Tínhamos MUITOS dados, foi necessário quebrar uma das tabelas em 7 porque, após 30min do Neo4j rodando, o programa parou de coletar os dados da tabela e apenas cerca de 1/7 da tabela havia sido transformada em arestas do grafo. Fomos fazendo aos poucos e, no fim, conseguimos gerar todas as arestas. Porém, eram muitos dados (mais de 2 milhões de arestas e mais de 100 mil vértices), o que dificultou a visualização. Porém, o grafo está montado e pode ser analisado, mas o recorte menor do grafo possibilitou visualizaras análises.
 
 ## Perguntas de Pesquisa/Análise Combinadas e Respectivas Análises
 
-### Pergunta/Análise 1
+> Apresente os resultados da forma mais rica possível, com gráficos e tabelas. Mesmo que o seu código rode online em um notebook, copie para esta parte a figura estática. A referência a código e links para execução online pode ser feita aqui ou na seção de detalhamento do projeto (o que for mais pertinente).
+
+> Liste aqui as perguntas de pesquisa/análise e respectivas análises. Nem todas as perguntas precisam de queries que as implementam. É possível haver perguntas em que a solução é apenas descrita para demonstrar o potencial da base. Abaixo são ilustradas três perguntas, mas pode ser um número maior a critério da equipe.
+>
+
+### Perguntas/Análise com Resposta Implementada
+
+> As respostas às perguntas podem devem ser ilustradas da forma mais rica possível com tabelas resultantes, grafos ou gráficos que apresentam os resultados. Os resultados podem ser analisados e comentados. Veja um exemplo de figura ilustrando uma comunidade detectada no Cytoscape:
+
+> ![Comunidade no Cytoscape](images/cytoscape-comunidade.png)
+>
+#### Pergunta/Análise 1
 > * Quais gêneros são os mais frequentes em cada plataforma?
 >   
 ```
@@ -114,7 +167,7 @@ SELECT Genero, COUNT(Genero) AS Qtd
     ORDER BY COUNT(Genero) DESC
 ```
 
-### Pergunta/Análise 2
+#### Pergunta/Análise 2
 > * Quais atores/diretores têm as melhores avaliações nos filmes em que participaram?
 ```
 DROP VIEW IF EXISTS AtoresAvaliacoes;
@@ -144,7 +197,7 @@ SELECT DA.Diretor, SUM(DA.Avaliacao)/COUNT(DA.Avaliacao) Media_Avaliacao
     ORDER BY Media_Avaliacao DESC
 ```
 
-### Pergunta/Análise 3
+#### Pergunta/Análise 3
 > * As plataformas Disney+ e Netflix concentram a disponibilização de conteúdo em alguma época do ano?
 
 >   Número de lançamentos em cada mês na plataforma Disney+
@@ -181,7 +234,7 @@ DROP VIEW mesDisneyPlus;
 DROP VIEW mesNetflix;
 ```
 
-### Pergunta/Análise 4
+#### Pergunta/Análise 4
 > * Qual a distribuição estatística das avaliações das mídias?
 
 >  Distribuição das avaliações de filmes
@@ -281,7 +334,7 @@ DROP VIEW IF EXISTS avSeries;
 DROP VIEW IF EXISTS avSeriesStr;
 ```
 
-### Pergunta/Análise 5
+#### Pergunta/Análise 5
 > * Levando em conta a taxa de classificação indicativa por ano, como o mercado lida com o envelhecimento do público?
 
 >   Classificação Indicativa dos filmes para cada ano
@@ -319,7 +372,7 @@ DROP VIEW IF EXISTS ciFilmes;
 DROP VIEW IF EXISTS ciSeries;
 ```
 
-### Pergunta/Análise 6
+#### Pergunta/Análise 6
 > * Comparando as avaliações do Rotten Tomatoes e do IMDb, quais são as obras mais controversas?
   
 >   Filmes
@@ -337,7 +390,7 @@ SELECT S.Titulo, ABS(CAST(SUBSTRING(S.IMDb, 1, LENGTH(S.IMDb) - 3) as DECIMAL(9,
     ORDER BY DiferencaAvaliacao DESC;
 ```
 
-### Pergunta/Análise 7
+#### Pergunta/Análise 7
 > * Existe alguma relação entre popularidade e exclusividade dos serviços de streaming?
 ```
 --Cria tabelas com todas as obras de cada plataforma contendo a media da avaliação
@@ -379,66 +432,96 @@ SELECT AVG(Avaliacao) FROM allDisneyPlus;
 SELECT AVG(Avaliacao) FROM allOthers;
 ```
 
-### Pergunta/Análise 8
+#### Pergunta/Análise 8
+> * Quais atores já atuaram ao lado de Tom Hanks?
+> ```cypher
+>MATCH (tom:Ator {Ator: "Tom Hanks"})-[:Atuou]->(:Titulo)<-[:Atuou]-(p:Ator) return p
+>```
+> ![Atores que ja co atuaram com Tom Hanks](assets/TomHanks1.png)
+> ![Atores que ja co atuaram com Tom Hanks](assets/TomHanks2.png)
+> 
+> A primeira imagem corresponde à execução da query em um grafo que contém menos dados (recorte). Já a segunda imagem corresponde ao grafo que contém as informações completas.
+
+#### Pergunta/Análise 9
+> * Quais elementos estão há 2 arestas de distância de Alba Flores?
+> ```cypher
+> MATCH (p:Ator {Ator: 'Alba Flores'})-[*1..2]-(hollywood) return DISTINCT p, hollywood
+> ```
+> ![Elementos há duas arestas de distância de Alba Flores](assets/AlbaFlores1.png)
+> ![Elementos há duas arestas de distância de Alba Flores](assets/AlbaFlores2.png)
+>
+> A primeira imagem corresponde à execução da query em um grafo que contém menos dados (recorte). Já a segunda imagem corresponde ao grafo que contém as informações completas.
+#### Pergunta/Análise 10
+> * Quais atores estão há 2 arestas de distância de Mark Hamill?
+> ```cypher
+> MATCH c=(p:Ator {Ator: 'Mark Hamill'})-[:CoAtuou]-(q:Ator) return c
+> ```
+> ![Atores há duas arestas de distância de Mark Hamill](assets/MarkHamill1.png)
+> ![Atores há duas arestas de distância de Mark Hamill](assets/MarkHamill2.png)
+>
+> A primeira imagem corresponde à execução da query em um grafo que contém menos dados (recorte). Já a segunda imagem corresponde ao grafo que contém as informações completas.
+### Perguntas/Análise Propostas mas Não Implementadas
+#### Pergunta/Análise 1
 > * Qual a palavra mais utilizada em títulos?
 >   
 >   * Seria necessário realizar uma análise estatística em cima de cada palavra de cada título, possivelmente eliminando artigos e números, para possibilitar uma análise mais interessante.
 .
 
-### Pergunta/Análise 9
+#### Pergunta/Análise 2
 > * Dado que uma pessoa X trabalhou com uma pessoa Y e com uma pessoa Z, qual a chance de Y trabalhar com Z em um projeto futuro?
 >   
 >   * Para responder esta pergunta, podemos fazer uma análise da modalidade predição de links que, com base nas conexões do grafo da Figura 3 (que relaciona pessoas pela obra trabalhada), atribui um valor de 0 a 1 que indica a probabilidade de essas pessoas trabalharem juntas no futuro.
 
-### Pergunta/Análise 10
+#### Pergunta/Análise 3
 > * Como podemos mapear a flexibilidade de atores e diretores quanto ao gênero da obra trabalhada?
 >   
 >   * Para responder esta pergunta, podemos fazer uma análise de formação de comunidade a partir do grafo da Figura 4 (que relaciona pessoas pelo gênero da obra trabalhada). Com ele, podemos avaliar quais atores/diretores tendem a participar mais de obras de um determinado gênero a partir das comunidades formadas.
 
-### Pergunta/Análise 11
+#### Pergunta/Análise 4
 > * Quais atores/diretores são mais populares no meio cinematográfico?
 >   
 >   * Para responder esta pergunta, podemos fazer uma análise de centralidade a partir do grafo da Figura 3 (que relaciona pessoas com a obra trabalhada). Com ele, podemos criar um sistema que atribui um valor para cada pessoa com base no número de ligações com outras pessoas que essa pessoa possui. Além disso, podemos aplicar um peso ponderado para ligações com pessoas mais populares. A partir disso, poderemos atribuir um valor de popularidade para cada pessoa e ver quem são os atores/diretores mais centrais.
 
-### Pergunta/Análise 12
+#### Pergunta/Análise 5
 > * Existe alguma relação entre duração e avaliação?
 >   
 >   * Podemos fazer uma análise estatística em cima da avaliação dos filmes de determinados intervalos de duração e estudar se existe alguma correlação entre duração e avaliação.
 
-### Pergunta/Análise 13
+#### Pergunta/Análise 6
 > * Existe alguma relação entre gênero e avaliação?
 >   
 >   * Podemos fazer uma análise estatística em cima da avaliação dos filmes de cada gênero e estudar se existe alguma correlação entre gênero e avaliação.
 
-### Pergunta/Análise 14
+#### Pergunta/Análise 7
 > * Como os gêneros mais populares mudaram ao longo dos anos?
 >   
 >   * Poderíamos fazer uma análise de quais gêneros mais populares em cada intervalo de anos (de 5 em 5 anos, por exemplo) e analisar as tendências.
 
-### Pergunta/Análise 15
+#### Pergunta/Análise 8
 > * Existe alguma relação entre país e gênero?
 >   
 >   * Podemos analisar quais são os principais gêneros de cada país e quais são os principais países de cada gênero e estudar as relações dos resultados encontrados.
 
-### Pergunta/Análise 16
+#### Pergunta/Análise 9
 > * Quais propriedades são comuns a filmes de sucesso/boa avaliação?
 >   
 >   * Poderíamos reunir os filmes mais populares e fazer uma análise estatística de cada campo disponível no dataset, possivelmente até fazer um gráfico de quais características comuns mais aparecem.
 
-### Pergunta/Análise 17
+#### Pergunta/Análise 10
 > * Quais são os elementos em comum das mídias que não estão disponíveis em nenhuma das plataformas analisadas?
 >   
 >   * Poderíamos reunir os filmes cuja plataforma está listada como “Outra”, em nosso dataset, e fazer uma análise estatística de cada campo disponível.
 
-### Pergunta/Análise 18
+#### Pergunta/Análise 11
 > * Como a popularização das séries impactou o mercado de filmes?
 >   
 >   * Poderíamos buscar a primeira data de lançamento de uma série na Netflix e supor que este é o ponto em que as séries começaram a se popularizar. Tendo essa data, podemos analisar os filmes que lançaram após essa data quanto à avaliação, número de filmes lançados e outros aspectos que possam ser interessantes.
 
 
-### Pergunta/Análise 19
+#### Pergunta/Análise 12
 > * Dado que um usuário gostou de um filme, qual seria uma boa recomendação de outro filme para ele assistir?
 >   
->   * Podemos analisar aspectos em comuns dos filmes (como gênero, atores/diretores envolvidos, avaliação, entre outros) para propor outros filmes, possivelmente até com técnicas de machine learning.
+>   * Podemos analisar aspectos em comum dos filmes (como gênero, atores/diretores envolvidos, avaliação, entre outros) para propor outros filmes, possivelmente até com técnicas de machine learning.
 
 [Notebook com queries](notebooks/Queries.ipynb)
+[Markdown com queries em Cypher](src/CypherQueries.md)
