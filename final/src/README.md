@@ -7,13 +7,13 @@ Instale a biblioteca pandas:
 ~~~
 pip install pandas
 ~~~
-Para mais informações consulte a [documantação](https://pandas.pydata.org/docs/getting_started/install.html).
+Para mais informações consulte a [documentação](https://pandas.pydata.org/docs/getting_started/install.html).
 
 Instale o pacote IMDbPY:
 ~~~
 pip install imdbpy
 ~~~
-Para mais informações consulte a [documantação](https://imdbpy.readthedocs.io/en/latest/).
+Para mais informações consulte a [documentação](https://imdbpy.readthedocs.io/en/latest/).
 
 _Em alguns códigos pode ser necessário alterar o caminho para os arquivos._
 
