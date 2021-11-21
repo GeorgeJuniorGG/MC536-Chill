@@ -75,6 +75,7 @@ plt.show();
 > Para o preparo do dataset para o modelo relacional, começamos a construir nossas tabelas a partir dos datasets encontrados. Foi necessário realizar operações de extração dos datasets que pegamos como base, integração de dados desses datasets e tratamento de dados para mantermos tudo em um só padrão. Também é importante destacarmos que transformamos atributos multivalorados em tabelas separadas, para garantirmos uma normalização no modelo relacional.
 > 
 >  A partir disso, iniciamos a etapa de tratamento e agregação de dados. Utilizando o pacote para python [IMDbPY](https://imdbpy.readthedocs.io/en/latest/) conseguirmos acessar a API do IMDb para coletarmos dados que estavam faltando no nosso dataset (estavam nulos ou vazios). Na primeira etapa completamos os dados das tabelas filmes e séries, usando o nome e o ano de lançamento era possível recuperar o id que o IMDb atribuiu aquela obra e então obter seus dados completos. Após realizar essa etapa a tabela de filmes passou de 1,7MB para 3,9MB, enquanto que a de series passou de 0,91MB para 1,7MB. Foi notado principalmento o complemento de dados como duração, número de temporadas (somente para séries), classificação indicativa, avaliação do IMDb e enredo. Vale ressaltar que essa etapa foi uma das mais demoradas, levando em consideração o tempo necessário para cada requisição e quantidade de obras tratadas.
+>  
 > Prosseguindo com a agregação de dados, as tabelas normalizadas foram tratadas em conjunto. Após recuperar todos os dados de uma determinada obra, era verificado se algum dos 15 primeiros atores já estava presente na tabela de atores, aqueles que não estivessem eram adicionados em uma tabela de atores intermediaria, o mesmo era feito para gêneros e diretores. 
 ~~~python
 def addNewCast(title,year,cast):
@@ -99,6 +100,7 @@ for i in range(len(movies)):
             addNewCast(movies['Titulo'][i],str(movies['Ano'][i]),dataMovie["cast"])
 ~~~
 > Em especial, não conseguimos obter os dados de diretores para séries, então optamos por criar uma tabela de criadores. Ainda, algumas tabelas não passaram por essa etapa por falta de fontes ou mesmo de tempo hábil para trabalhar sobre seus dados. Durante esse processo exercitamos o uso de tratamento de exceções em python, após as primeiras execuções percebemos a necessidade de aplicar esse princípio devido ao tempo de execução do programa e a variedade de erros possíveis.
+> 
 > Com a agregação realizada, algumas rotinas simples foram realizadas para homogenizar os dados, como:
 > * Séries que apresentavam um intervalo de anos passaram a apresentar somente o ano de lançamento
 > * Classificações indicativas no formato americano foram convertidas para o formato brasileiro 
@@ -138,6 +140,7 @@ Tabela | Tamanho Original (em MB) | Tamanho Final (em MB)
 > [Instruções para executar os códigos de agregação e tratamento de dados.](/final/src/README.md)
 > [Notebook para construção do grafo.](notebook/GraphDatasetBuilder.ipynb)
 > [Notebook para construção do grafo menor.](notebooks/SmallerGraphDatasetBuilder.ipynb)
+> 
 > _Os comandos em cypher estão em markdown dentro dos notebooks de construção dos grafos._
 
 > Aqui devem ser apresentadas as operações de construção do dataset:
