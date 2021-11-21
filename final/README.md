@@ -136,9 +136,13 @@ Tabela | Tamanho Original (em MB) | Tamanho Final (em MB)
 > Coloque um link para o arquivo do notebook, programas ou workflows que executam as operações que você apresentar.
 > 
 > [Notebook para construção da versão inicial dos arquivos csv.](notebooks/DatasetBuilder.ipynb)
+> 
 > [Programa para tratamento de dados faltantes.](src/addTvShowData.py)
+> 
 > [Instruções para executar os códigos de agregação e tratamento de dados.](/final/src/README.md)
+> 
 > [Notebook para construção do grafo.](notebook/GraphDatasetBuilder.ipynb)
+> 
 > [Notebook para construção do grafo menor.](notebooks/SmallerGraphDatasetBuilder.ipynb)
 > 
 > _Os comandos em cypher estão em markdown dentro dos notebooks de construção dos grafos._
