@@ -22,10 +22,11 @@
 > Modelo lógico relacional
 ~~~
 Filmes(_titulo_, _data de lançamento_, enredo, duração, plataforma,  classificação indicativa, avaliação IMDb, Rotten Tomatoes)
-Séries(_título_, _data de lançamento_, enredo, temporadas, duração, plataforma, classificação indicativa, avaliação IMDb, Rotten Tomatoes)
+Séries(_título_, _data de lançamento_, enredo, número de temporadas, duração, plataforma, classificação indicativa, avaliação IMDb, Rotten Tomatoes)
 
 Atores(_título_, _data de lançamento_,  _ator_)
 Diretores(_título_, _data de lançamento_, _diretor_)
+Criadores(_título_, _data de lançamento_, _criador_)
 
 Gênero(_título_, _data de lançamento_, _gênero_)
 País(_título_, _data de lançamento_, _país_)
