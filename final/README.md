@@ -542,15 +542,43 @@ ORDER BY Qtd DESC
 `SAÍDA`
 
 > Vale ressaltar que, para responder a essa pergunta, precisamos criar uma nova tabela com as palavras separadas. Também precisamos tratá-las de forma que ficassem todas com letras minúsculas (de modo que 'Love' e 'love' contem como a mesma palavra) e retiramos possíveis dois pontos (':') do final de palavras (de mode que 'today:' e 'today' contem como a mesma palavra).
+> 
+> Além disso, a fim de filtrar palavras como artigos ('the', 'a') e pronomes ('i', 'my'), separamos as palavras através de seu tamanho, criando uma tabela apenas para aquelas com pelo menos quatro caracteres. Contudo não deixamos as palavras com no máximo três caracteres de fora e criamos uma tabela apenas para esse grupo, a fim de procurar substantivos com até esse tamanho.
+>
+> Com isso, podemos observar que a palavra mais utilizada em títulos é 'love', seguida de 'story', 'christmas', 'movie' e 'man', esta última sendo a primeira palavra com menos de 4 caracteres a aparecer no ranking geral.
 
 #### Pergunta/Análise 9
 > * Existe alguma relação entre país e gênero?
+> * * Tabela dividida por Gêneros
+```
+SELECT G.Genero, P.Pais, COUNT(G.Genero) AS Qtd
+FROM Paises P, Generos G
+WHERE P.Titulo = G.Titulo
+GROUP BY Genero, Pais
+ORDER BY Genero, Qtd DESC
 ```
 
+> * * Tabela dividia por Países
 ```
+SELECT P.Pais, G.Genero, COUNT(G.Genero) AS Qtd
+FROM Paises P, Generos G
+WHERE P.Titulo = G.Titulo
+GROUP BY Pais, Genero
+ORDER BY Pais, Qtd DESC
+```
+
+> Produzimos duas tabelas diferentes para facilitar a visualização de acordo com o que se pretende, como ver qual o gênero mais comum da Alemanha ou saber em que países mais se produz filmes de Comédia. Através delas, podemos perceber que países mais afetados por guerras, como Afeganistão e Iraque, apresentam mais filmes do gênero 'War' e que países do Oeste Europeu se interessam mais em filmes de comédias do que do Leste.
 
 #### Pergunta/Análise 10
 > * Como os gêneros mais populares mudaram ao longo dos anos?
+```
+SELECT Genero, Ano, COUNT(Genero) AS Qtd
+FROM Generos
+GROUP BY Genero, Ano
+ORDER BY Ano, Qtd DESC
+```
+
+> Apesar das poucas linhas de código, a análise dessa pergunta não foi tão fácil quanto esperado. No entanto, fomos capazes de notar a soberania dos gêneros 'Drama' e 'Comedy', sempre em primeiro e segundo lugar, respectivamente. Além disso, notamos como o gênero 'Action' passou por uma despopularização, aparecendo cada vez menos nos anos a partir de 2012, último ano em que apareceu como terceiro lugar no ranking. Em anos mais recentes, este gênero passou a ocupar quarto ou quinto lugar, chegando a sexto em 2021. Na contramão, vimos o gênero 'Documentary' crescer e se tornar mais relevante a cada ano, principalmente na década de 2010.
 
 #### Pergunta/Análise 11
 > * Quais atores já atuaram ao lado de Tom Hanks?
