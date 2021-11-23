@@ -6,7 +6,7 @@
 * `George Gigilas Junior` - `216741`
 
 ## Resumo do Projeto
-> O acesso a filmes e séries foi muito facilitado com a popularização dos serviços de streaming. No entanto, o aumento no número dessas plataformas pode trazer dúvidas sobre quantas e quais assinar. Por isso, o grupo se propôs a avaliar o conteúdo disponível em quatro das principais plataformas de streaming: Netflix, Amazon Prime Video, Hulu e Disney Plus.
+> O acesso a filmes e séries foi muito facilitado com a popularização dos serviços de streaming. No entanto, o aumento no número dessas plataformas pode trazer dúvidas sobre quantas e quais assinar. Por isso, o grupo se propôs a avaliar o conteúdo disponível em duas das principais plataformas de streaming: Netflix e Disney Plus.
 
 > Com isso, pode-se responder a perguntas como quais filmes possuem as melhores (ou piores) avaliações, quanto tempo uma obra demora para ser lançada em uma dessas plataformas, entre outras. No entanto, devido a uma maior disponibilidade de dados sobre o conteúdo da Netflix e da Disney+, o projeto apresentará uma maior quantidade de informações sobre estas plataformas.
 
@@ -63,15 +63,6 @@ título da base | link | breve descrição
 `IMDb` | [Link](https://www.imdb.com/) | `Base de dados para filmes e séries em geral`
 
 ## Detalhamento do Projeto
-> Apresente aqui detalhes do processo de construção do dataset e análise. Nesta seção ou na seção de Perguntas podem aparecer destaques de código como indicado a seguir. Note que foi usada uma técnica de highlight de código, que envolve colocar o nome da linguagem na abertura de um trecho com `~~~`, tal como `~~~python`.
-> Os destaques de código devem ser trechos pequenos de poucas linhas, que estejam diretamente ligados a alguma explicação. Não utilize trechos extensos de código. Se algum código funcionar online (tal como um Jupyter Notebook), aqui pode haver links. No caso do Jupyter, preferencialmente para o Binder abrindo diretamente o notebook em questão.
-
-~~~python
-df = pd.read_excel("/content/drive/My Drive/Colab Notebooks/dataset.xlsx");
-sns.set(color_codes=True);
-sns.distplot(df.Hemoglobin);
-plt.show();
-~~~
 
 > Para o preparo do dataset para o modelo relacional, começamos a construir nossas tabelas a partir dos datasets encontrados. Foi necessário realizar operações de extração dos datasets que pegamos como base, integração de dados desses datasets e tratamento de dados para mantermos tudo em um só padrão. Também é importante destacarmos que transformamos atributos multivalorados em tabelas separadas, para garantirmos uma normalização no modelo relacional.
 > 
@@ -158,17 +149,22 @@ Tabela | Tamanho Original (em MB) | Tamanho Final (em MB)
 > * Transformação de dados na criação de tabelas para faciliar a criação dos grafos no Neo4j.
 
 ## Evolução do Projeto
-> Relatório de evolução, descrevendo as evoluções na modelagem do projeto, dificuldades enfrentadas, mudanças de rumo, melhorias e lições aprendidas. Referências aos diagramas, modelos e recortes de mudanças são bem-vindos.
-> 
-> Podem ser apresentados destaques na evolução dos modelos conceitual e lógico. O modelo inicial e intermediários (quando relevantes) e explicação de refinamentos, mudanças ou evolução do projeto que fundamentaram as decisões.
-> 
-> Relatar o processo para se alcançar os resultados é tão importante quanto os resultados.
 
-> Como primeiro desafio, tivemos a integração de dados de várias fontes. Percebemos que fontes diferentes não seguem um padrão, o que dificulta muito a integração. Por exemplo, o ano de lançamento das séries da Netflix correspondiam ao ano de lançamento da última temporada, enquanto o ano da Disney + correspondia o intervalo no qual a séries lançava episódios. Por sua vez, a tabela de séries apresentava o ano de lançamento do primeiro episódio. Após várias etapas de tratamento, conseguimos nossa primeira versão do dataset. É importante mencionar que fizemos alguns ajustes nos modelos iniciais conceitual e relacional, de acordo com o que fomos notando.
+> Como primeiro desafio, tivemos a integração de dados de várias fontes. Percebemos que fontes diferentes não seguem um padrão, o que dificulta muito a integração. Por exemplo, o ano de lançamento das séries da Netflix correspondiam ao ano de lançamento da última temporada, enquanto o ano da Disney + correspondia o intervalo no qual a séries lançava episódios. Por sua vez, a tabela de séries apresentava o ano de lançamento do primeiro episódio. Após várias etapas de tratamento, conseguimos nossa primeira versão do dataset. É importante mencionar que fizemos alguns ajustes nos modelos iniciais conceitual e relacional, de acordo com o que fomos notando. 
+> 
+> Versão inicial do modelo conceitual:
+> ![Versao inicial do modelo conceitual](assets/modeloconceitualinicial.png)
+> 
+> Versão final do modelo conceitual:
+> ![Versao final do modelo conceitual](assets/modeloconceitual.png)
+>
+> Ainda nessa etapa, fizemos versões para as queries que consideramos ter complexidade fácil e média, em um notebook, para, posteriormente rodarmos novamente com os dados completos. Essas queries acabaram nos dando pistas sobre o que tratar nas tabelas que havíamos produzido. Por exemplo, a classificação indicativa estava inconsistente, então sabíamos que precisávamos padronizar de acordo com uma única métrica.
 > 
 > Após isso, percebemos que atores famosos apareciam poucas vezes na tabela, e percebemos que estavam faltando dados de muitos filmes. Foi então que começamos o processo de tratamento de dados faltante a partir da API do IMDb, esse processo foi desafiador devido ao tempo de execução para o volume de dados que tinhamos. Aqui foi necessário estruturar o código de modo a fazer o menor número de requisições possível e, como mencionado anteriormente, trabalhar bastante com o tratamento de exceção. As primeiras versões recuperavam todos os dados faltantes para depois salvar uma tabela completa na mémoria, durante uma execução, após mais de sete horas de execução, a API acusou um erro que não estava sendo tratado, perdemos um trabalho que estava quase concluído. Após esse incidente, passamos a trabalhar ainda mais firme com o tratamento de excessão e começamos a escrever somente linhas nas tabelas, para evitar percas caso algo parecido voltasse a acontecer.  
 > 
 > Nessa etapa também percebemos a ausência de dados para os diretores de séries e decidimos incluir uma nova tabela ao dataset, a de criadores.
+>
+> Como mencionado anteriormente, as queries já estavam prontas em um arquivo notebook. Portanto, para obtermos os resultados mais completos, apenas atualizamos as tabelas do arquivo e rodamos o programa novamente. Além dessas queries, selecionamos 2 queries consideradas mais difíceis para resolver, sendo que uma delas envolveu a criação de outra tabela.
 > 
 > Resolvido o modelo relacional, conseguimos ter os arquivos finais prontos, e partimos para o modelo de grafos. Inicialmente, começamos o processo com os dados incompletos, por serem menos dados. Tivemos algumas dificuldades pois já eram muitos dados, mas conseguimos construir o grafo e realizar algumas queries. Também fizemos projeções a partir da criação de novas arestas (como a aresta "CoAtuou") para analisarmos grafos homogêneos e para poderem ser respondidas perguntas mais complexas.
 > 
