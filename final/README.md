@@ -185,9 +185,15 @@ Tabela | Tamanho Original (em MB) | Tamanho Final (em MB)
 > 
 > Nessa etapa também percebemos a ausência de dados para os diretores de séries e decidimos incluir uma nova tabela ao dataset, a de criadores.
 >
-> Como mencionado anteriormente, as queries já estavam prontas em um arquivo notebook. Portanto, para obtermos os resultados mais completos, apenas atualizamos as tabelas do arquivo e rodamos o programa novamente. Além dessas queries, selecionamos 2 queries consideradas mais difíceis para resolver, sendo que uma delas envolveu a criação de outra tabela.
+> Como mencionado anteriormente, as queries já estavam prontas em um arquivo notebook. Portanto, para obtermos os resultados mais completos, apenas atualizamos as tabelas do arquivo e rodamos o programa novamente. Além dessas queries, selecionamos 3 queries consideradas mais difíceis para resolver, sendo que uma delas envolveu a criação de outra tabela.
 > 
-> Resolvido o modelo relacional, conseguimos ter os arquivos finais prontos, e partimos para o modelo de grafos. Inicialmente, começamos o processo com os dados incompletos, por serem menos dados. Tivemos algumas dificuldades pois já eram muitos dados, mas conseguimos construir o grafo e realizar algumas queries. Também fizemos projeções a partir da criação de novas arestas (como a aresta "CoAtuou") para analisarmos grafos homogêneos e para poderem ser respondidas perguntas mais complexas.
+> Resolvido o modelo relacional, conseguimos ter os arquivos finais prontos, e partimos para o modelo de grafos. Inicialmente, começamos o processo com os dados incompletos, por serem menos dados. Tivemos algumas dificuldades pois já eram muitos dados, mas conseguimos construir o grafo e realizar algumas queries. Ao longo do processo, também fizemos projeções a partir da criação de novas arestas (como a aresta "CoAtuou") para analisarmos grafos homogêneos e para poderem ser respondidas perguntas mais complexas. Vale ressaltar que o modelo de grafo também foi modificado de acordo com as evoluções.
+>
+> Versão inicial do modelo de grafos:
+> ![Versao inicial do modelo de grafos](assets/modelografoinicial.png)
+> 
+> Versão final do modelo de grafos:
+> ![Versao final do modelo de grafos](assets/modelografo.png)
 > 
 > Então, partimos para o grafo completo, o que foi muito difícil. Tínhamos MUITOS dados, foi necessário quebrar uma das tabelas em 7 porque, após 30min do Neo4j rodando, o programa parou de coletar os dados da tabela e apenas cerca de 1/7 da tabela havia sido transformada em arestas do grafo. Fomos fazendo aos poucos e, no fim, conseguimos gerar todas as arestas. Porém, eram muitos dados (mais de 2 milhões de arestas e mais de 100 mil vértices), o que dificultou a visualização. Porém, o grafo está montado e pode ser analisado, mas o recorte menor do grafo possibilitou visualizaras análises.
 
@@ -519,6 +525,9 @@ SELECT AVG(Avaliacao) FROM allOthers;
 > * Existe alguma relação entre país e gênero?
 
 #### Pergunta/Análise 10
+> * Como os gêneros mais populares mudaram ao longo dos anos?
+
+#### Pergunta/Análise 11
 > * Quais atores já atuaram ao lado de Tom Hanks?
 > ```cypher
 >MATCH (tom:Ator {Ator: "Tom Hanks"})-[:Atuou]->(:Titulo)<-[:Atuou]-(p:Ator) return p
@@ -528,7 +537,7 @@ SELECT AVG(Avaliacao) FROM allOthers;
 > 
 > A primeira imagem corresponde à execução da query em um grafo que contém menos dados (recorte). Já a segunda imagem corresponde ao grafo que contém as informações completas.
 
-#### Pergunta/Análise 11
+#### Pergunta/Análise 12
 > * Quais elementos estão até 2 arestas de distância de Alba Flores?
 > ```cypher
 > MATCH (p:Ator {Ator: 'Alba Flores'})-[*1..2]-(hollywood) return DISTINCT p, hollywood
@@ -537,7 +546,7 @@ SELECT AVG(Avaliacao) FROM allOthers;
 > ![Elementos há duas arestas de distância de Alba Flores](assets/AlbaFlores2.png)
 >
 > A primeira imagem corresponde à execução da query em um grafo que contém menos dados (recorte). Já a segunda imagem corresponde ao grafo que contém as informações completas.
-#### Pergunta/Análise 12
+#### Pergunta/Análise 13
 > * Quais atores já co-atuaram com Mark Hamill?
 > ```cypher
 > MATCH c=(p:Ator {Ator: 'Mark Hamill'})-[:CoAtuou]-(q:Ator) return c
@@ -573,27 +582,21 @@ SELECT AVG(Avaliacao) FROM allOthers;
 >   * Podemos fazer uma análise estatística em cima da avaliação dos filmes de cada gênero e estudar se existe alguma correlação entre gênero e avaliação.
 
 #### Pergunta/Análise 6
-> * Como os gêneros mais populares mudaram ao longo dos anos?
->   
->   * Poderíamos fazer uma análise de quais gêneros mais populares em cada intervalo de anos (de 5 em 5 anos, por exemplo) e analisar as tendências.
-
-#### Pergunta/Análise 7
 > * Quais propriedades são comuns a filmes de sucesso/boa avaliação?
 >   
 >   * Poderíamos reunir os filmes mais populares e fazer uma análise estatística de cada campo disponível no dataset, possivelmente até fazer um gráfico de quais características comuns mais aparecem.
 
-#### Pergunta/Análise 8
+#### Pergunta/Análise 7
 > * Quais são os elementos em comum das mídias que não estão disponíveis em nenhuma das plataformas analisadas?
 >   
 >   * Poderíamos reunir os filmes cuja plataforma está listada como “Outra”, em nosso dataset, e fazer uma análise estatística de cada campo disponível.
 
-#### Pergunta/Análise 9
+#### Pergunta/Análise 8
 > * Como a popularização das séries impactou o mercado de filmes?
 >   
 >   * Poderíamos buscar a primeira data de lançamento de uma série na Netflix e supor que este é o ponto em que as séries começaram a se popularizar. Tendo essa data, podemos analisar os filmes que lançaram após essa data quanto à avaliação, número de filmes lançados e outros aspectos que possam ser interessantes.
 
-
-#### Pergunta/Análise 10
+#### Pergunta/Análise 9
 > * Dado que um usuário gostou de um filme, qual seria uma boa recomendação de outro filme para ele assistir?
 >   
 >   * Podemos analisar aspectos em comum dos filmes (como gênero, atores/diretores envolvidos, avaliação, entre outros) para propor outros filmes, possivelmente até com técnicas de machine learning.
