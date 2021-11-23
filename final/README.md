@@ -70,7 +70,7 @@ título da base | link | breve descrição
 
 ## Detalhamento do Projeto
 
-> Para o preparo do dataset para o modelo relacional, começamos a construir nossas tabelas a partir dos datasets encontrados. Foi necessário realizar operações de extração dos datasets que pegamos como base, integração de dados desses datasets e tratamento de dados para mantermos tudo em um só padrão. Também é importante destacarmos que transformamos atributos multivalorados em tabelas separadas, para garantirmos uma normalização no modelo relacional. Segue um exemplo de como extraímos atores da tabela de filmes para integrarmos na nossa própria tabela de atores:
+> Para o preparo do dataset para o modelo relacional, começamos a construir nossas tabelas a partir dos datasets encontrados. Foi necessário realizar operações de extração dos datasets que pegamos como base, integração de dados desses datasets e tratamento de dados, para mantermos tudo em um só padrão. Também é importante destacarmos que transformamos atributos multivalorados em tabelas separadas, para garantirmos uma normalização no modelo relacional. Segue um exemplo de como extraímos atores da tabela de filmes para integrarmos na nossa própria tabela de atores:
 >
 ~~~python
 for i in range(len(movies)):
@@ -87,9 +87,9 @@ for i in range(len(movies)):
         anos.append(movies["Year"][i])
 ~~~
 > 
->  A partir disso, iniciamos a etapa de tratamento e agregação de dados. Utilizando o pacote para python [IMDbPY](https://imdbpy.readthedocs.io/en/latest/) conseguirmos acessar a API do IMDb para coletarmos dados que estavam faltando no nosso dataset (estavam nulos ou vazios). Na primeira etapa completamos os dados das tabelas filmes e séries, usando o nome e o ano de lançamento era possível recuperar o id que o IMDb atribuiu aquela obra e então obter seus dados completos. Após realizar essa etapa a tabela de filmes passou de 1,7MB para 3,9MB, enquanto que a de series passou de 0,91MB para 1,7MB. Foi notado principalmento o complemento de dados como duração, número de temporadas (somente para séries), classificação indicativa, avaliação do IMDb e enredo. Vale ressaltar que essa etapa foi uma das mais demoradas, levando em consideração o tempo necessário para cada requisição e quantidade de obras tratadas.
+>  A partir disso, iniciamos a etapa de tratamento e agregação de dados. Utilizando o pacote para python [IMDbPY](https://imdbpy.readthedocs.io/en/latest/), conseguirmos acessar a API do IMDb para coletarmos dados que estavam faltando no nosso dataset (estavam nulos ou vazios). Na primeira etapa, completamos os dados das tabelas filmes e séries: usando o nome e o ano de lançamento, era possível recuperar o id que o IMDb atribuiu aquela obra, e então obter seus dados completos. Após realizar essa etapa, a tabela de filmes passou de 1,7MB para 3,9MB, enquanto a de series passou de 0,91MB para 1,7MB. Foi notado, principalmente, o complemento de dados como duração, número de temporadas (somente para séries), classificação indicativa, avaliação do IMDb e enredo. Vale ressaltar que essa etapa foi uma das mais demoradas, levando em consideração o tempo necessário para cada requisição e a quantidade de obras tratadas.
 >  
-> Prosseguindo com a agregação de dados, as tabelas normalizadas foram tratadas em conjunto. Após recuperar todos os dados de uma determinada obra, era verificado se algum dos 15 primeiros atores já estava presente na tabela de atores, aqueles que não estivessem eram adicionados em uma tabela de atores intermediaria, o mesmo era feito para gêneros e diretores. 
+> Prosseguindo com a agregação de dados, as tabelas normalizadas foram tratadas em conjunto. Após recuperar todos os dados de uma determinada obra, foi verificado se algum dos 15 primeiros atores já estava presente na tabela de atores, sendo que aqueles que não estivessem foram adicionados em uma tabela de atores intermediaria. O mesmo era feito para gêneros e diretores. 
 ~~~python
 def addNewCast(title,year,cast):
     oldCast = getOldCast(title, year)
@@ -112,13 +112,13 @@ for i in range(len(movies)):
         try:
             addNewCast(movies['Titulo'][i],str(movies['Ano'][i]),dataMovie["cast"])
 ~~~
-> Em especial, não conseguimos obter os dados de diretores para séries, então optamos por criar uma tabela de criadores. Ainda, algumas tabelas não passaram por essa etapa por falta de fontes ou mesmo de tempo hábil para trabalhar sobre seus dados. Durante esse processo exercitamos o uso de tratamento de exceções em python, após as primeiras execuções percebemos a necessidade de aplicar esse princípio devido ao tempo de execução do programa e a variedade de erros possíveis.
+> Em especial, não conseguimos obter os dados de diretores para séries, então optamos por criar uma tabela de criadores. Ainda, algumas tabelas não passaram por essa etapa por falta de fontes ou mesmo de tempo hábil para trabalhar sobre seus dados. Durante esse processo, exercitamos o uso de tratamento de exceções em python, já que, após as primeiras execuções, percebemos a necessidade de aplicar esse princípio devido ao tempo de execução do programa e a variedade de erros possíveis.
 > 
 > Com a agregação realizada, algumas rotinas simples foram realizadas para homogenizar os dados, como:
 > * Séries que apresentavam um intervalo de anos passaram a apresentar somente o ano de lançamento
 > * Classificações indicativas no formato americano foram convertidas para o formato brasileiro 
 > 
-> Outros tratamentos foram mais complexos, a agregação de dados gerou certa inconsistência nos anos de lançamento, algumas obras apresentavam uma diferença de um ano nessa informação. Ordenando as tabelas provenientes da normalização em ordem alfabetica, era possível verificar se havia alguma diferença nos anos de determinado titulo e validar essa informação usando as tabelas principais (filmes, series). Sem essa etapa não seria possível realizar o join entre as tabelas, uma vez que nossa chave primária e o nome da obra juntamente com o ano de lançamento.
+> Outros tratamentos foram mais complexos, a agregação de dados gerou certa inconsistência nos anos de lançamento, algumas obras apresentavam uma diferença de um ano nessa informação. Ordenando as tabelas provenientes da normalização em ordem alfabética, era possível verificar se havia alguma diferença nos anos de determinado título e validar essa informação usando as tabelas principais (filmes, series). Sem essa etapa não seria possível realizar o join entre as tabelas, uma vez que nossa chave primária e o nome da obra juntamente com o ano de lançamento.
 > Para finalizar essa etapa, foi feita uma verificação final, procurando por tuplas repetidas ou que possuiam informações nulas.
 ~~~python
 #Recupe as posições que possui algum campo especifico nulo
@@ -142,7 +142,7 @@ Tabela | Tamanho Original (em MB) | Tamanho Final (em MB)
 `Gêneros` | 1,5 | 1,8
 > _A tabela de diretores sofreu uma redução pois todas as séries apresentavam o campo de diretor nulo, essas linhas foram removidas na etapa anterior_  
 > 
-> Para o modelo de grafos, fizemos duas versões: uma para os arquivos antes do preenchimento de dados faltantes (que serve como um recorte) e outra para os arquivos finais. Ambos requeriram construir novas tabelas para facilitar a análise no Neo4j. Exemplos de tabelas foram: tabelas que expressam a relação entre o título e gênero/ator/diretor, tabelas que contêm apenas atores, diretores e títulos, modificação do título para estar no formato título (ano), e quebra da tabela de título e atores porque o Neo4j não carregava a tabela inteira (possivelmente por ser muito grande e demorar muito tempo para processar).
+> Para o modelo de grafos, fizemos duas versões: uma para os arquivos antes do preenchimento de dados faltantes (que serve como um recorte) e outra para os arquivos finais. Ambos requeriram a construção de novas tabelas para facilitar a análise no Neo4j. Exemplos de tabelas foram: tabelas que expressam a relação entre o título e gênero/ator/diretor, tabelas que contêm apenas atores, apenas diretores e apenas títulos, modificação do título para estar no formato "título (ano)", e quebra da tabela de título e atores porque o Neo4j não carregava a tabela inteira (possivelmente por ser muito grande e demorar muito tempo para processar).
 > 
 > Para as análises do modelo relacional, utilizamos o beaker X e h2 para rodarmos códigos em SQL no jupyter. Já para o modelo de grafos, fizemos comandos em cypher para rodarmos na versão de desktop do Neo4j.
 
@@ -171,7 +171,7 @@ Tabela | Tamanho Original (em MB) | Tamanho Final (em MB)
 
 ## Evolução do Projeto
 
-> Como primeiro desafio, tivemos a integração de dados de várias fontes. Percebemos que fontes diferentes não seguem um padrão, o que dificulta muito a integração. Por exemplo, o ano de lançamento das séries da Netflix correspondiam ao ano de lançamento da última temporada, enquanto o ano da Disney + correspondia o intervalo no qual a séries lançava episódios. Por sua vez, a tabela de séries apresentava o ano de lançamento do primeiro episódio. Após várias etapas de tratamento, conseguimos nossa primeira versão do dataset. É importante mencionar que fizemos alguns ajustes nos modelos iniciais conceitual e relacional, de acordo com o que fomos notando. 
+> Como primeiro desafio, tivemos a integração de dados de várias fontes. Percebemos que fontes diferentes não seguem um padrão, o que dificulta muito a integração. Por exemplo, o ano de lançamento das séries da Netflix correspondiam ao ano de lançamento da última temporada, enquanto o ano da Disney + correspondia o intervalo no qual a séries lançava episódios. Por sua vez, a tabela de séries apresentava o ano de lançamento do primeiro episódio. Após várias etapas de tratamento, conseguimos nossa primeira versão do dataset. É importante mencionar que fizemos alguns ajustes nos modelos iniciais conceitual e relacional, de acordo com o que fomos julgando necessário. 
 > 
 > Versão inicial do modelo conceitual:
 > ![Versao inicial do modelo conceitual](assets/modeloconceitualinicial.png)
@@ -181,13 +181,13 @@ Tabela | Tamanho Original (em MB) | Tamanho Final (em MB)
 >
 > Ainda nessa etapa, fizemos versões para as queries que consideramos ter complexidade fácil e média, em um notebook, para, posteriormente rodarmos novamente com os dados completos. Essas queries acabaram nos dando pistas sobre o que tratar nas tabelas que havíamos produzido. Por exemplo, a classificação indicativa estava inconsistente, então sabíamos que precisávamos padronizar de acordo com uma única métrica.
 > 
-> Após isso, percebemos que atores famosos apareciam poucas vezes na tabela, e percebemos que estavam faltando dados de muitos filmes. Foi então que começamos o processo de tratamento de dados faltante a partir da API do IMDb, esse processo foi desafiador devido ao tempo de execução para o volume de dados que tinhamos. Aqui foi necessário estruturar o código de modo a fazer o menor número de requisições possível e, como mencionado anteriormente, trabalhar bastante com o tratamento de exceção. As primeiras versões recuperavam todos os dados faltantes para depois salvar uma tabela completa na mémoria, durante uma execução, após mais de sete horas de execução, a API acusou um erro que não estava sendo tratado, perdemos um trabalho que estava quase concluído. Após esse incidente, passamos a trabalhar ainda mais firme com o tratamento de excessão e começamos a escrever somente linhas nas tabelas, para evitar percas caso algo parecido voltasse a acontecer.  
+> Após isso, percebemos que atores famosos apareciam poucas vezes na tabela, e percebemos que estavam faltando dados de muitos filmes. Foi então que começamos o processo de tratamento de dados faltantes a partir da API do IMDb. Esse processo foi desafiador devido ao tempo de execução para o volume de dados que tinhamos. Aqui foi necessário estruturar o código de modo a fazer o menor número de requisições possível e, como mencionado anteriormente, trabalhar bastante com o tratamento de exceção. As primeiras versões recuperavam todos os dados faltantes para depois salvar uma tabela completa na mémoria. Porém, durante uma execução, após mais de sete horas de execução, a API acusou um erro que não estava sendo tratado e perdemos um trabalho que estava quase concluído. Após esse incidente, passamos a trabalhar ainda mais firme com o tratamento de excessão e começamos a escrever somente linhas nas tabelas, para evitar perdas, caso algo parecido voltasse a acontecer.  
 > 
 > Nessa etapa também percebemos a ausência de dados para os diretores de séries e decidimos incluir uma nova tabela ao dataset, a de criadores.
 >
-> Como mencionado anteriormente, as queries já estavam prontas em um arquivo notebook. Portanto, para obtermos os resultados mais completos, apenas atualizamos as tabelas do arquivo e rodamos o programa novamente. Além dessas queries, selecionamos 3 queries consideradas mais difíceis para resolver, sendo que uma delas envolveu a criação de outra tabela.
+> Como mencionado anteriormente, boa parte das queries já estavam prontas em um arquivo notebook. Portanto, para obtermos os resultados mais completos, apenas atualizamos as tabelas do arquivo e rodamos o programa novamente. Além dessas queries, selecionamos 3 queries consideradas mais difíceis para resolver, sendo que uma delas envolveu a criação de outras tabelas.
 > 
-> Resolvido o modelo relacional, conseguimos ter os arquivos finais prontos, e partimos para o modelo de grafos. Inicialmente, começamos o processo com os dados incompletos, por serem menos dados. Tivemos algumas dificuldades pois já eram muitos dados, mas conseguimos construir o grafo e realizar algumas queries. Ao longo do processo, também fizemos projeções a partir da criação de novas arestas (como a aresta "CoAtuou") para analisarmos grafos homogêneos e para poderem ser respondidas perguntas mais complexas. Vale ressaltar que o modelo de grafo também foi modificado de acordo com as evoluções.
+> Resolvido o modelo relacional, conseguimos ter os arquivos finais prontos, e partimos para o modelo de grafos. Inicialmente, começamos o processo com os dados incompletos, por serem menos dados. Tivemos algumas dificuldades pois já eram muitos dados, mas conseguimos construir o grafo e realizar algumas queries. Ao longo do processo, também fizemos projeções a partir da criação de novas arestas (como a aresta "CoAtuou") para analisarmos grafos homogêneos e para poderem ser respondidas perguntas mais complexas. Vale ressaltar que o modelo de grafo também foi modificado de acordo com o andamento do projeto.
 >
 > Versão inicial do modelo de grafos:
 > ![Versao inicial do modelo de grafos](assets/modelografoinicial.png)
@@ -195,20 +195,11 @@ Tabela | Tamanho Original (em MB) | Tamanho Final (em MB)
 > Versão final do modelo de grafos:
 > ![Versao final do modelo de grafos](assets/modelografo.png)
 > 
-> Então, partimos para o grafo completo, o que foi muito difícil. Tínhamos MUITOS dados, foi necessário quebrar uma das tabelas em 7 porque, após 30min do Neo4j rodando, o programa parou de coletar os dados da tabela e apenas cerca de 1/7 da tabela havia sido transformada em arestas do grafo. Fomos fazendo aos poucos e, no fim, conseguimos gerar todas as arestas. Porém, eram muitos dados (mais de 2 milhões de arestas e mais de 100 mil vértices), o que dificultou a visualização. Porém, o grafo está montado e pode ser analisado, mas o recorte menor do grafo possibilitou visualizaras análises.
+> Então, partimos para o grafo completo, o que foi muito difícil. Tínhamos MUITOS dados, foi necessário quebrar uma das tabelas em 7 porque, após 30min do Neo4j rodando, o programa parou de coletar os dados da tabela e apenas cerca de 1/7 da tabela havia sido transformada em arestas do grafo. Fomos fazendo aos poucos e, no fim, conseguimos gerar todas as arestas. Porém, eram muitos dados (mais de 2 milhões de arestas e mais de 100 mil vértices), o que dificultou a visualização. Ao fim desse processo, o grafo estava montado e pôde ser analisado, mas o recorte menor do grafo possibilitou visualizar melhor as análises.
 
 ## Perguntas de Pesquisa/Análise Combinadas e Respectivas Análises
 
-> Apresente os resultados da forma mais rica possível, com gráficos e tabelas. Mesmo que o seu código rode online em um notebook, copie para esta parte a figura estática. A referência a código e links para execução online pode ser feita aqui ou na seção de detalhamento do projeto (o que for mais pertinente).
-
-> Liste aqui as perguntas de pesquisa/análise e respectivas análises. Nem todas as perguntas precisam de queries que as implementam. É possível haver perguntas em que a solução é apenas descrita para demonstrar o potencial da base. Abaixo são ilustradas três perguntas, mas pode ser um número maior a critério da equipe.
->
-
 ### Perguntas/Análise com Resposta Implementada
-
-> As respostas às perguntas podem devem ser ilustradas da forma mais rica possível com tabelas resultantes, grafos ou gráficos que apresentam os resultados. Os resultados podem ser analisados e comentados. Veja um exemplo de figura ilustrando uma comunidade detectada no Cytoscape:
-
-> ![Comunidade no Cytoscape](images/cytoscape-comunidade.png)
 
 #### Pergunta/Análise 1
 > * Quais filmes têm a melhor/pior avaliação?
@@ -332,7 +323,7 @@ WHERE Plataforma LIKE '%Netflix,Disney+%'
 ```
 ![Filmes em mais de uma plataforma](assets/Queries/filmesduasplataformas.PNG)
 
-> Seréies:
+> Séries:
 ```
 SELECT DISTINCT Plataforma FROM Series
 ``` 
@@ -511,7 +502,7 @@ DROP VIEW mesNetflix;
 > 
 ![Disponibilizacao de conteudo Netflix](assets/Queries/lancamentosmesnetflix.PNG)
 
-> Quanto aos lancamentos da Disney+, nota-se uma concentração no mês de novembro ('November'). Isso se deve ao fato de que o lançamento da plataforma ocorreu nesse mês (12 de novembro de 2019), acarretando no lançamento de todas mídias originalmente disponíveis nesse mês. Já em relação à Netflix, temos uma distribuição mais próxima de uniforme, apesar de ser possível perceber uma concentração nos meses de julho ('July'), dezembro ('December') e setembro ('September'), períodos de férias no Hemisfério Norte, em que as pessoas dispõem de mais tempo para assistir aos seus lançamentos.
+> Quanto aos lançamentos da Disney+, nota-se uma concentração no mês de novembro ('November'). Isso se deve ao fato de que o lançamento da plataforma ocorreu nesse mês (12 de novembro de 2019), acarretando no lançamento de todas mídias originalmente disponíveis nesse mês. Já em relação à Netflix, temos uma distribuição mais próxima de uniforme, apesar de ser possível perceber uma concentração nos meses de julho ('July'), dezembro ('December') e setembro ('September'), períodos de férias no Hemisfério Norte, em que as pessoas dispõem de mais tempo para assistir aos seus lançamentos.
 
 #### Pergunta/Análise 11
 > * Qual a distribuição estatística das avaliações das mídias?
@@ -665,7 +656,7 @@ DROP VIEW IF EXISTS ciSeries;
 > 
 ![Classificacao indicativa series](assets/Queries/clasindicativaseriesano.PNG)
 
-> Ao visualizar o resultado desta querie, notamos que o mercado de filmes e séries não segue uma ou mais gerações específicas e lida com seu envelhecimento. Ao contrário, essa indústria constantemente aposta na renovação de seus consumidores, continuando a produzir mídias livres para todos os públicos e também novas e diferentes mídias para jovens e adultos. Vale ressaltar, também, que essa análise requeriu que não considerássemos alguns anos da lista, visto que alguns possuem quantidade insuficiente de mídias para responder a pergunta.
+> Ao visualizar o resultado desta query, notamos que o mercado de filmes e séries não segue uma ou mais gerações específicas e lida com seu envelhecimento. Ao contrário, essa indústria constantemente aposta na renovação de seus consumidores, continuando a produzir mídias livres para todos os públicos e também novas e diferentes mídias para jovens e adultos. Vale ressaltar, também, que essa análise requeriu que não considerássemos alguns anos da lista, visto que alguns possuem quantidade insuficiente de mídias para responder a pergunta.
 
 #### Pergunta/Análise 13
 > * Comparando as avaliações do Rotten Tomatoes e do IMDb, quais são as obras mais controversas?
@@ -737,7 +728,7 @@ SELECT AVG(Avaliacao) FROM allOthers;
 > 
 > Média outras: 57.9674
 
-> Com esta querie, consideramos as mídias presentes em apenas uma plataforma, seja ela Netflix, DisneyPlus ou outra (qualquer outra plataforma foi considerada no placar 'Média outras'). Com isso, pudemos calcular a média das avaliações do IMDb para os filmes e séries presentes exclusivamente em cada plataforma e, assim, notar que as mídias da DisneyPlus são as mais bem avaliadas das plataformas, com vantagem de aproximadamente 2,26 pontos sobre a Netflix, que, por sua vez, apresenta vantagem de aproximadamente 2,51 pontos sobre as demais plataformas. Esse resultado poderia, por exemplo, ser usado como propagando da DisneyPlus.
+> Com esta query, consideramos as mídias presentes em apenas uma plataforma, seja ela Netflix, DisneyPlus ou outra (qualquer outra plataforma foi considerada no placar 'Média outras'). Com isso, pudemos calcular a média das avaliações do IMDb para os filmes e séries presentes exclusivamente em cada plataforma e, assim, notar que as mídias da DisneyPlus são as mais bem avaliadas das plataformas, com vantagem de aproximadamente 2,26 pontos sobre a Netflix, que, por sua vez, apresenta vantagem de aproximadamente 2,51 pontos sobre as demais plataformas. Esse resultado poderia, por exemplo, ser usado como propaganda da DisneyPlus.
 
 #### Pergunta/Análise 15
 > * Qual a palavra mais utilizada em títulos?
@@ -770,7 +761,7 @@ ORDER BY Qtd DESC
 > 
 ![Palavras com 4 letras ou mais](assets/Queries/palavrastitulos4.PNG)
 
-> Vale ressaltar que, para responder a essa pergunta, precisamos criar uma nova tabela com as palavras separadas. Também precisamos tratá-las de forma que ficassem todas com letras minúsculas (de modo que 'Love' e 'love' contem como a mesma palavra) e retiramos possíveis dois pontos (':') do final de palavras (de mode que 'today:' e 'today' contem como a mesma palavra).
+> Vale ressaltar que, para responder a essa pergunta, precisamos criar uma nova tabela com as palavras separadas. Também precisamos tratá-las de forma que ficassem todas com letras minúsculas (de modo que 'Love' e 'love' contem como a mesma palavra, por exemplo) e retiramos possíveis dois pontos (':') do final de palavras (de mode que 'today:' e 'today' contem como a mesma palavra, por exemplo).
 > 
 > Além disso, a fim de filtrar palavras como artigos ('the', 'a') e pronomes ('i', 'my'), separamos as palavras através de seu tamanho, criando uma tabela apenas para aquelas com pelo menos quatro caracteres. Contudo não deixamos as palavras com no máximo três caracteres de fora e criamos uma tabela apenas para esse grupo, a fim de procurar substantivos com até esse tamanho.
 >
