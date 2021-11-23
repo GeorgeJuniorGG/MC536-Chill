@@ -209,8 +209,176 @@ Tabela | Tamanho Original (em MB) | Tamanho Final (em MB)
 > As respostas às perguntas podem devem ser ilustradas da forma mais rica possível com tabelas resultantes, grafos ou gráficos que apresentam os resultados. Os resultados podem ser analisados e comentados. Veja um exemplo de figura ilustrando uma comunidade detectada no Cytoscape:
 
 > ![Comunidade no Cytoscape](images/cytoscape-comunidade.png)
->
+
 #### Pergunta/Análise 1
+> * Quais filmes têm a melhor/pior avaliação?
+> 
+```
+DROP VIEW IF EXISTS Movies;
+
+CREATE VIEW Movies AS
+SELECT SUBSTRING(IMDb, 1, 3) AS IMDb
+FROM Filmes
+WHERE IMDb NOT LIKE '%nan%'
+```
+> Melhor avaliação:
+```
+SELECT F.Titulo, F.IMDb
+FROM Filmes F
+WHERE SUBSTRING(F.IMDb, 1, 3) = (SELECT MAX(M.IMDb) FROM Movies M)
+```
+![Filmes com melhor avaliação](assets/Queries/melhoravaliacao.PNG)
+
+> Pior avaliação:
+```
+SELECT F.Titulo, F.IMDb
+FROM Filmes F
+WHERE SUBSTRING(F.IMDb, 1, 3) = (SELECT MIN(M.IMDb) FROM Movies M)
+```
+![Filmes com pior avaliação](assets/Queries/pioravaliacao.PNG)
+
+#### Pergunta/Análise 2
+> * Qual o tempo entre a estreia de um filme e seu lançamento na plataforma?
+> 
+> Netflix:
+
+```
+DROP VIEW IF EXISTS anoNetflix;
+
+CREATE VIEW anoNetflix AS
+SELECT CAST(Ano AS INT) AS Estreia, CAST(RIGHT(LancamentoNaPlataforma, 4) AS INT) AS LancamentoNetflix
+FROM Netflix
+WHERE Titulo IN (SELECT Titulo FROM Filmes)
+```
+```
+DROP VIEW IF EXISTS difNetflix;
+
+CREATE VIEW difNetflix AS
+SELECT LancamentoNetflix - Estreia AS TempoParaLancamento
+FROM anoNetflix
+```
+```
+SELECT Titulo
+FROM precaria
+WHERE LancamentoNetflix - Estreia = -1
+```
+```
+SELECT TempoParaLancamento, COUNT(TempoParaLancamento) AS Qtd
+FROM difNetflix
+GROUP BY TempoParaLancamento
+ORDER BY TempoParaLancamento
+```
+![Diferença lançamento netflix](assets/Queries/tempolancamentonetflix.PNG)
+
+> Disney Plus:
+```
+DROP VIEW IF EXISTS anoDisney;
+
+CREATE VIEW anoDisney AS
+SELECT CAST(LEFT(Ano, 4) AS INT) AS Estreia, CAST(RIGHT(LancamentoNaPlataforma, 4) AS INT) AS LancamentoDisney
+FROM DisneyPlus
+WHERE Titulo IN (SELECT Titulo FROM Filmes)
+```
+```
+DROP VIEW IF EXISTS difDisney;
+
+CREATE VIEW difDisney AS
+SELECT LancamentoDisney - Estreia AS TempoParaLancamento
+FROM anoDisney
+```
+```
+SELECT TempoParaLancamento, COUNT(TempoParaLancamento) AS Qtd
+FROM difDisney
+GROUP BY TempoParaLancamento
+ORDER BY TempoParaLancamento
+```
+![diferença lançamento disney plus](assets/Queries/tempolancamentodisney.PNG)
+
+#### Pergunta/Análise 3
+> * Quantos filmes/séries foram feitos em cada país?
+> 
+```
+SELECT Pais, COUNT(Pais) AS Qtd
+FROM Paises
+WHERE Pais NOT LIKE 'nan'
+GROUP BY Pais
+ORDER BY Qtd DESC
+```
+![Filmes por pais](/assets/Queries/quantosfilmeseriepais.PNG)
+
+#### Pergunta/Análise 4
+> * Quais atores participaram de mais filmes?
+> 
+```
+SELECT Ator, COUNT(Ator) AS Filmes
+FROM Atores
+WHERE Titulo IN (SELECT Titulo FROM Filmes) AND Ator NOT LIKE '%nan%'
+GROUP BY Ator
+ORDER BY Filmes DESC
+```
+![Atores que mais participaram de filmes](assets/Queries/atoresmaisfilmes.PNG)
+
+#### Pergunta/Análise 5
+> * Quantos filmes/séries estão presentes em mais de uma plataforma?
+>
+> Filmes:
+```
+SELECT DISTINCT Plataforma FROM Filmes
+```
+```
+SELECT Titulo, Plataforma
+FROM Filmes
+WHERE Plataforma LIKE '%Netflix,Disney+%'
+```
+![Filmes em mais de uma plataforma](assets/Queries/filmesduasplataformas.PNG)
+
+> Seréies:
+```
+SELECT DISTINCT Plataforma FROM Series
+``` 
+```
+SELECT Titulo, Plataforma
+FROM Series
+WHERE Plataforma LIKE '%Netflix,Disney+%'
+```
+![Series em mais de uma plataforma](assets/Queries/seriesduasplataformas.PNG)
+
+#### Pergunta/Análise 6
+> * Quais atores trabalharam em mídias de mais de uma plataforma?
+> 
+> Filmes:
+```
+SELECT Ator
+FROM Atores
+WHERE Titulo IN (SELECT Titulo FROM Filmes WHERE Plataforma LIKE '%Netflix,Disney+%')
+GROUP BY Ator
+```
+![Atores de filmes em mais de uma platadorma](assets/Queries/atoresfilmesduasplataformas.PNG)
+
+> Séries:
+```
+SELECT Ator
+FROM Atores
+WHERE Titulo IN (SELECT Titulo FROM Series WHERE Plataforma LIKE '%Netflix,Disney+%')
+GROUP BY Ator
+```
+![Atores de series em mais de uma platadorma](assets/Queries/atoresseriesduasplataformas.PNG)
+
+#### Pergunta/Análise 7
+> * Quais são os atores e diretores com mais participações em filmes +18?
+> 
+```
+SELECT Ator, COUNT(Ator) AS Qtd
+FROM Atores
+WHERE Titulo IN (SELECT Titulo FROM Filmes WHERE ClassificacaoIndicativa IN ('18+', 'NR', 'R', 'NC-17', 'TV-MA'))
+    AND Ator NOT LIKE '%nan%'
+GROUP BY Ator
+ORDER BY Qtd DESC
+```
+
+![Atores que mais participaram em filmes +18](assets/Queries/atoresmais18.PNG)
+
+#### Pergunta/Análise 8
 > * Quais gêneros são os mais frequentes em cada plataforma?
 >   
 ```
@@ -253,14 +421,16 @@ SELECT Genero, COUNT(Genero) AS Qtd
     ORDER BY COUNT(Genero) DESC
 ```
 > Disney Plus:
+> 
 ![Generos mais frequentes Disney Plus](assets/Queries/generosdisney.PNG)
 >
 > Netflix:
+> 
 ![Generos mais frequentes Netflix](assets/Queries/generosnetflix.PNG)
 
 > Conforme esperado, nota-se uma maior concentração de gêneros 'Family', 'Animation' e 'Fantasy', considerados infantis e mais adequados para programações em família, na plataforma Disney+. Além disso, na plataforma Netflix, nota-se um ranking bem próximo à concentração de gêneros por ano, que será visto na Pergunta 10.
 
-#### Pergunta/Análise 2
+#### Pergunta/Análise 9
 > * Quais atores/diretores têm as melhores avaliações nos filmes em que participaram?
 ```
 DROP VIEW IF EXISTS AtoresAvaliacoes;
@@ -290,12 +460,14 @@ SELECT DA.Diretor, SUM(DA.Avaliacao)/COUNT(DA.Avaliacao) Media_Avaliacao
     ORDER BY Media_Avaliacao DESC
 ```
 > Atores:
+> 
 ![Melhores avaliacoes atores](assets/Queries/atoresmelhoravaliacao.PNG)
 >
 > Diretores:
+> 
 ![Melhores avaliacoes diretores](assets/Queries/diretoresmelhoravaliacao.PNG)
 
-#### Pergunta/Análise 3
+#### Pergunta/Análise 10
 > * As plataformas Disney+ e Netflix concentram a disponibilização de conteúdo em alguma época do ano?
 
 >   Número de lançamentos em cada mês na plataforma Disney+
@@ -332,14 +504,16 @@ DROP VIEW mesDisneyPlus;
 DROP VIEW mesNetflix;
 ```
 > Disney Plus:
+> 
 ![Disponibilizacao de conteudo Disney Plus](assets/Queries/lancamentosmesdisney.PNG)
 >
 > Netflix:
+> 
 ![Disponibilizacao de conteudo Netflix](assets/Queries/lancamentosmesnetflix.PNG)
 
 > Quanto aos lancamentos da Disney+, nota-se uma concentração no mês de novembro ('November'). Isso se deve ao fato de que o lançamento da plataforma ocorreu nesse mês (12 de novembro de 2019), acarretando no lançamento de todas mídias originalmente disponíveis nesse mês. Já em relação à Netflix, temos uma distribuição mais próxima de uniforme, apesar de ser possível perceber uma concentração nos meses de julho ('July'), dezembro ('December') e setembro ('September'), períodos de férias no Hemisfério Norte, em que as pessoas dispõem de mais tempo para assistir aos seus lançamentos.
 
-#### Pergunta/Análise 4
+#### Pergunta/Análise 11
 > * Qual a distribuição estatística das avaliações das mídias?
 
 >  Distribuição das avaliações de filmes
@@ -439,12 +613,14 @@ DROP VIEW IF EXISTS avSeries;
 DROP VIEW IF EXISTS avSeriesStr;
 ```
 > Filmes:
+> 
 ![Distribuicao avaliacao filmes](assets/Queries/intervaloavaliacaofilmes.PNG)
 >
 > Series:
+> 
 ![Distribuicao avaliacao series](assets/Queries/intervaloavaliacaoseries.PNG)
 
-#### Pergunta/Análise 5
+#### Pergunta/Análise 12
 > * Levando em conta a taxa de classificação indicativa por ano, como o mercado lida com o envelhecimento do público?
 
 >   Classificação Indicativa dos filmes para cada ano
@@ -482,14 +658,16 @@ DROP VIEW IF EXISTS ciFilmes;
 DROP VIEW IF EXISTS ciSeries;
 ```
 > Filmes:
+> 
 ![Classificacao indicativa filmes](assets/Queries/clasindicativafilmesano.PNG)
 >
 > Series:
+> 
 ![Classificacao indicativa series](assets/Queries/clasindicativaseriesano.PNG)
 
 > Ao visualizar o resultado desta querie, notamos que o mercado de filmes e séries não segue uma ou mais gerações específicas e lida com seu envelhecimento. Ao contrário, essa indústria constantemente aposta na renovação de seus consumidores, continuando a produzir mídias livres para todos os públicos e também novas e diferentes mídias para jovens e adultos. Vale ressaltar, também, que essa análise requeriu que não considerássemos alguns anos da lista, visto que alguns possuem quantidade insuficiente de mídias para responder a pergunta.
 
-#### Pergunta/Análise 6
+#### Pergunta/Análise 13
 > * Comparando as avaliações do Rotten Tomatoes e do IMDb, quais são as obras mais controversas?
   
 >   Filmes
@@ -512,7 +690,7 @@ SELECT S.Titulo, ABS(CAST(SUBSTRING(S.IMDb, 1, LENGTH(S.IMDb) - 3) as DECIMAL(9,
 > Series:
 ![Avaliacoes IMDb/Rotten Tomatoes series](assets/Queries/difavaliacaoseries.PNG)
 
-#### Pergunta/Análise 7
+#### Pergunta/Análise 14
 > * Existe alguma relação entre popularidade e exclusividade dos serviços de streaming?
 ```
 --Cria tabelas com todas as obras de cada plataforma contendo a media da avaliação
@@ -561,7 +739,7 @@ SELECT AVG(Avaliacao) FROM allOthers;
 
 > Com esta querie, consideramos as mídias presentes em apenas uma plataforma, seja ela Netflix, DisneyPlus ou outra (qualquer outra plataforma foi considerada no placar 'Média outras'). Com isso, pudemos calcular a média das avaliações do IMDb para os filmes e séries presentes exclusivamente em cada plataforma e, assim, notar que as mídias da DisneyPlus são as mais bem avaliadas das plataformas, com vantagem de aproximadamente 2,26 pontos sobre a Netflix, que, por sua vez, apresenta vantagem de aproximadamente 2,51 pontos sobre as demais plataformas. Esse resultado poderia, por exemplo, ser usado como propagando da DisneyPlus.
 
-#### Pergunta/Análise 8
+#### Pergunta/Análise 15
 > * Qual a palavra mais utilizada em títulos?
 
 > * * Palavras com pelo menos 4 caracteres
@@ -585,9 +763,11 @@ ORDER BY Qtd DESC
 `SAÍDA`
 
 > Até 3 Letras:
+> 
 ![Palavras com ate 3 letras](assets/Queries/palavrastitulos3.PNG)
 >
 > 4 Letras ou mais:
+> 
 ![Palavras com 4 letras ou mais](assets/Queries/palavrastitulos4.PNG)
 
 > Vale ressaltar que, para responder a essa pergunta, precisamos criar uma nova tabela com as palavras separadas. Também precisamos tratá-las de forma que ficassem todas com letras minúsculas (de modo que 'Love' e 'love' contem como a mesma palavra) e retiramos possíveis dois pontos (':') do final de palavras (de mode que 'today:' e 'today' contem como a mesma palavra).
@@ -596,7 +776,7 @@ ORDER BY Qtd DESC
 >
 > Com isso, podemos observar que a palavra mais utilizada em títulos é 'love', seguida de 'story', 'christmas', 'movie' e 'man', esta última sendo a primeira palavra com menos de 4 caracteres a aparecer no ranking geral.
 
-#### Pergunta/Análise 9
+#### Pergunta/Análise 16
 > * Existe alguma relação entre país e gênero?
 > * * Tabela dividida por Gêneros
 ```
@@ -624,7 +804,7 @@ ORDER BY Pais, Qtd DESC
 
 > Produzimos duas tabelas diferentes para facilitar a visualização de acordo com o que se pretende, como ver qual o gênero mais comum da Alemanha ou saber em que países mais se produz filmes de Comédia. Através delas, podemos perceber que países mais afetados por guerras, como Afeganistão e Iraque, apresentam mais filmes do gênero 'War' e que países do Oeste Europeu se interessam mais em filmes de comédias do que do Leste.
 
-#### Pergunta/Análise 10
+#### Pergunta/Análise 17
 > * Como os gêneros mais populares mudaram ao longo dos anos?
 ```
 SELECT Genero, Ano, COUNT(Genero) AS Qtd
@@ -637,7 +817,7 @@ ORDER BY Ano, Qtd DESC
 
 > Apesar das poucas linhas de código, a análise dessa pergunta não foi tão fácil quanto esperado. No entanto, fomos capazes de notar a soberania dos gêneros 'Drama' e 'Comedy', sempre em primeiro e segundo lugar, respectivamente. Além disso, notamos como o gênero 'Action' passou por uma despopularização, aparecendo cada vez menos nos anos a partir de 2012, último ano em que apareceu como terceiro lugar no ranking. Em anos mais recentes, este gênero passou a ocupar quarto ou quinto lugar, chegando a sexto em 2021. Na contramão, vimos o gênero 'Documentary' crescer e se tornar mais relevante a cada ano, principalmente na década de 2010.
 
-#### Pergunta/Análise 11
+#### Pergunta/Análise 18
 > * Quais atores já atuaram ao lado de Tom Hanks?
 > ```cypher
 >MATCH (tom:Ator {Ator: "Tom Hanks"})-[:Atuou]->(:Titulo)<-[:Atuou]-(p:Ator) return p
@@ -647,7 +827,7 @@ ORDER BY Ano, Qtd DESC
 > 
 > A primeira imagem corresponde à execução da query em um grafo que contém menos dados (recorte). Já a segunda imagem corresponde ao grafo que contém as informações completas.
 
-#### Pergunta/Análise 12
+#### Pergunta/Análise 19
 > * Quais elementos estão até 2 arestas de distância de Alba Flores?
 > ```cypher
 > MATCH (p:Ator {Ator: 'Alba Flores'})-[*1..2]-(hollywood) return DISTINCT p, hollywood
@@ -656,7 +836,7 @@ ORDER BY Ano, Qtd DESC
 > ![Elementos há duas arestas de distância de Alba Flores](assets/AlbaFlores2.png)
 >
 > A primeira imagem corresponde à execução da query em um grafo que contém menos dados (recorte). Já a segunda imagem corresponde ao grafo que contém as informações completas.
-#### Pergunta/Análise 13
+#### Pergunta/Análise 20
 > * Quais atores já co-atuaram com Mark Hamill?
 > ```cypher
 > MATCH c=(p:Ator {Ator: 'Mark Hamill'})-[:CoAtuou]-(q:Ator) return c
