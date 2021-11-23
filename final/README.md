@@ -38,6 +38,12 @@ Disney Plus(_título_, _data de lançamento_, data de lançamento na plataforma)
 > Modelo de grafos de propriedades
 ![Modelo de Grafos](assets/modelografo.png)
 
+> Projeção do grafo com relação ao gênero
+![Projecao Genero](assets/ProjecaoGenero.png)
+
+> Projeção do grafo com relação a atores que já co-atuaram
+![Projecao CoAtores](assets/ProjecaoCoatuou.png)
+
 ## Dataset Publicado
 
 título do arquivo/base | link | breve descrição
