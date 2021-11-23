@@ -513,6 +513,12 @@ SELECT AVG(Avaliacao) FROM allOthers;
 ```
 
 #### Pergunta/Análise 8
+> * Qual a palavra mais utilizada em títulos?
+
+#### Pergunta/Análise 9
+> * Existe alguma relação entre país e gênero?
+
+#### Pergunta/Análise 10
 > * Quais atores já atuaram ao lado de Tom Hanks?
 > ```cypher
 >MATCH (tom:Ator {Ator: "Tom Hanks"})-[:Atuou]->(:Titulo)<-[:Atuou]-(p:Ator) return p
@@ -522,7 +528,7 @@ SELECT AVG(Avaliacao) FROM allOthers;
 > 
 > A primeira imagem corresponde à execução da query em um grafo que contém menos dados (recorte). Já a segunda imagem corresponde ao grafo que contém as informações completas.
 
-#### Pergunta/Análise 9
+#### Pergunta/Análise 11
 > * Quais elementos estão até 2 arestas de distância de Alba Flores?
 > ```cypher
 > MATCH (p:Ator {Ator: 'Alba Flores'})-[*1..2]-(hollywood) return DISTINCT p, hollywood
@@ -531,7 +537,7 @@ SELECT AVG(Avaliacao) FROM allOthers;
 > ![Elementos há duas arestas de distância de Alba Flores](assets/AlbaFlores2.png)
 >
 > A primeira imagem corresponde à execução da query em um grafo que contém menos dados (recorte). Já a segunda imagem corresponde ao grafo que contém as informações completas.
-#### Pergunta/Análise 10
+#### Pergunta/Análise 12
 > * Quais atores já co-atuaram com Mark Hamill?
 > ```cypher
 > MATCH c=(p:Ator {Ator: 'Mark Hamill'})-[:CoAtuou]-(q:Ator) return c
@@ -542,63 +548,52 @@ SELECT AVG(Avaliacao) FROM allOthers;
 > A primeira imagem corresponde à execução da query em um grafo que contém menos dados (recorte). Já a segunda imagem corresponde ao grafo que contém as informações completas.
 ### Perguntas/Análise Propostas mas Não Implementadas
 #### Pergunta/Análise 1
-> * Qual a palavra mais utilizada em títulos?
->   
->   * Seria necessário realizar uma análise estatística em cima de cada palavra de cada título, possivelmente eliminando artigos e números, para possibilitar uma análise mais interessante.
-.
-
-#### Pergunta/Análise 2
 > * Dado que uma pessoa X trabalhou com uma pessoa Y e com uma pessoa Z, qual a chance de Y trabalhar com Z em um projeto futuro?
 >   
 >   * Para responder esta pergunta, podemos fazer uma análise da modalidade predição de links que, com base nas conexões do grafo da Figura 3 (que relaciona pessoas pela obra trabalhada), atribui um valor de 0 a 1 que indica a probabilidade de essas pessoas trabalharem juntas no futuro.
 
-#### Pergunta/Análise 3
+#### Pergunta/Análise 2
 > * Como podemos mapear a flexibilidade de atores e diretores quanto ao gênero da obra trabalhada?
 >   
 >   * Para responder esta pergunta, podemos fazer uma análise de formação de comunidade a partir do grafo da Figura 4 (que relaciona pessoas pelo gênero da obra trabalhada). Com ele, podemos avaliar quais atores/diretores tendem a participar mais de obras de um determinado gênero a partir das comunidades formadas.
 
-#### Pergunta/Análise 4
+#### Pergunta/Análise 3
 > * Quais atores/diretores são mais populares no meio cinematográfico?
 >   
 >   * Para responder esta pergunta, podemos fazer uma análise de centralidade a partir do grafo da Figura 3 (que relaciona pessoas com a obra trabalhada). Com ele, podemos criar um sistema que atribui um valor para cada pessoa com base no número de ligações com outras pessoas que essa pessoa possui. Além disso, podemos aplicar um peso ponderado para ligações com pessoas mais populares. A partir disso, poderemos atribuir um valor de popularidade para cada pessoa e ver quem são os atores/diretores mais centrais.
 
-#### Pergunta/Análise 5
+#### Pergunta/Análise 4
 > * Existe alguma relação entre duração e avaliação?
 >   
 >   * Podemos fazer uma análise estatística em cima da avaliação dos filmes de determinados intervalos de duração e estudar se existe alguma correlação entre duração e avaliação.
 
-#### Pergunta/Análise 6
+#### Pergunta/Análise 5
 > * Existe alguma relação entre gênero e avaliação?
 >   
 >   * Podemos fazer uma análise estatística em cima da avaliação dos filmes de cada gênero e estudar se existe alguma correlação entre gênero e avaliação.
 
-#### Pergunta/Análise 7
+#### Pergunta/Análise 6
 > * Como os gêneros mais populares mudaram ao longo dos anos?
 >   
 >   * Poderíamos fazer uma análise de quais gêneros mais populares em cada intervalo de anos (de 5 em 5 anos, por exemplo) e analisar as tendências.
 
-#### Pergunta/Análise 8
-> * Existe alguma relação entre país e gênero?
->   
->   * Podemos analisar quais são os principais gêneros de cada país e quais são os principais países de cada gênero e estudar as relações dos resultados encontrados.
-
-#### Pergunta/Análise 9
+#### Pergunta/Análise 7
 > * Quais propriedades são comuns a filmes de sucesso/boa avaliação?
 >   
 >   * Poderíamos reunir os filmes mais populares e fazer uma análise estatística de cada campo disponível no dataset, possivelmente até fazer um gráfico de quais características comuns mais aparecem.
 
-#### Pergunta/Análise 10
+#### Pergunta/Análise 8
 > * Quais são os elementos em comum das mídias que não estão disponíveis em nenhuma das plataformas analisadas?
 >   
 >   * Poderíamos reunir os filmes cuja plataforma está listada como “Outra”, em nosso dataset, e fazer uma análise estatística de cada campo disponível.
 
-#### Pergunta/Análise 11
+#### Pergunta/Análise 9
 > * Como a popularização das séries impactou o mercado de filmes?
 >   
 >   * Poderíamos buscar a primeira data de lançamento de uma série na Netflix e supor que este é o ponto em que as séries começaram a se popularizar. Tendo essa data, podemos analisar os filmes que lançaram após essa data quanto à avaliação, número de filmes lançados e outros aspectos que possam ser interessantes.
 
 
-#### Pergunta/Análise 12
+#### Pergunta/Análise 10
 > * Dado que um usuário gostou de um filme, qual seria uma boa recomendação de outro filme para ele assistir?
 >   
 >   * Podemos analisar aspectos em comum dos filmes (como gênero, atores/diretores envolvidos, avaliação, entre outros) para propor outros filmes, possivelmente até com técnicas de machine learning.
