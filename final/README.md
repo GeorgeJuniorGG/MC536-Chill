@@ -521,8 +521,33 @@ SELECT AVG(Avaliacao) FROM allOthers;
 #### Pergunta/Análise 8
 > * Qual a palavra mais utilizada em títulos?
 
+* * Palavras com pelo menos 4 caracteres
+```
+SELECT Palavra, COUNT(Palavra) AS Qtd
+FROM Palavras
+WHERE LENGTH(Palavra) > 3
+GROUP BY Palavra
+ORDER BY Qtd DESC
+```
+`SAÍDA`
+
+* * Palavras com no máximo 3 caracteres
+```
+SELECT Palavra, COUNT(Palavra) AS Qtd
+FROM Palavras
+WHERE LENGTH(Palavra) <= 3
+GROUP BY Palavra
+ORDER BY Qtd DESC
+```
+`SAÍDA`
+
+> Vale ressaltar que, para responder a essa pergunta, precisamos criar uma nova tabela com as palavras separadas. Também precisamos tratá-las de forma que ficassem todas com letras minúsculas (de modo que 'Love' e 'love' contem como a mesma palavra) e retiramos possíveis dois pontos (':') do final de palavras (de mode que 'today:' e 'today' contem como a mesma palavra).
+
 #### Pergunta/Análise 9
 > * Existe alguma relação entre país e gênero?
+```
+
+```
 
 #### Pergunta/Análise 10
 > * Como os gêneros mais populares mudaram ao longo dos anos?
