@@ -154,7 +154,7 @@ Tabela | Tamanho Original (em MB) | Tamanho Final (em MB)
 > 
 > [Instruções para executar os códigos de agregação e tratamento de dados.](/final/src/README.md)
 > 
-> [Notebook para construção do grafo.](notebook/GraphDatasetBuilder.ipynb)
+> [Notebook para construção do grafo.](notebooks/GraphDatasetBuilder.ipynb)
 > 
 > [Notebook para construção do grafo menor.](notebooks/SmallerGraphDatasetBuilder.ipynb)
 > 
