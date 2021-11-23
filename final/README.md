@@ -252,6 +252,11 @@ SELECT Genero, COUNT(Genero) AS Qtd
     HAVING COUNT(Genero)
     ORDER BY COUNT(Genero) DESC
 ```
+> Disney Plus:
+![Generos mais frequentes Disney Plus](assets/Queries/generosdisney.PNG)
+>
+> Netflix:
+![Generos mais frequentes Netflix](assets/Queries/generosnetflix.PNG)
 
 #### Pergunta/Análise 2
 > * Quais atores/diretores têm as melhores avaliações nos filmes em que participaram?
@@ -282,6 +287,11 @@ SELECT DA.Diretor, SUM(DA.Avaliacao)/COUNT(DA.Avaliacao) Media_Avaliacao
     GROUP BY DA.Diretor
     ORDER BY Media_Avaliacao DESC
 ```
+> Atores:
+![Melhores avaliacoes atores](assets/Queries/atoresmelhoravaliacao.PNG)
+>
+> Diretores:
+![Melhores avaliacoes diretores](assets/Queries/diretoresmelhoravaliacao.PNG)
 
 #### Pergunta/Análise 3
 > * As plataformas Disney+ e Netflix concentram a disponibilização de conteúdo em alguma época do ano?
@@ -319,6 +329,11 @@ SELECT N.Mes, COUNT(N.Mes) As Lancamentos
 DROP VIEW mesDisneyPlus;
 DROP VIEW mesNetflix;
 ```
+> Disney Plus:
+![Disponibilizacao de conteudo Disney Plus](assets/Queries/lancamentosmesdisney.PNG)
+>
+> Netflix:
+![Disponibilizacao de conteudo Netflix](assets/Queries/lancamentosmesnetflix.PNG)
 
 #### Pergunta/Análise 4
 > * Qual a distribuição estatística das avaliações das mídias?
@@ -419,6 +434,11 @@ DROP VIEW IF EXISTS avFilmesString;
 DROP VIEW IF EXISTS avSeries;
 DROP VIEW IF EXISTS avSeriesStr;
 ```
+> Filmes:
+![Distribuicao avaliacao filmes](assets/Queries/intervaloavaliacaofilmes.PNG)
+>
+> Series:
+![Distribuicao avaliacao series](assets/Queries/intervaloavaliacaoseries.PNG)
 
 #### Pergunta/Análise 5
 > * Levando em conta a taxa de classificação indicativa por ano, como o mercado lida com o envelhecimento do público?
@@ -457,6 +477,11 @@ ORDER BY Ano
 DROP VIEW IF EXISTS ciFilmes;
 DROP VIEW IF EXISTS ciSeries;
 ```
+> Filmes:
+![Classificacao indicativa filmes](assets/Queries/clasindicativafilmesano.PNG)
+>
+> Series:
+![Classificacao indicativa series](assets/Queries/clasindicativaseriesano.PNG)
 
 #### Pergunta/Análise 6
 > * Comparando as avaliações do Rotten Tomatoes e do IMDb, quais são as obras mais controversas?
@@ -475,6 +500,11 @@ SELECT S.Titulo, ABS(CAST(SUBSTRING(S.IMDb, 1, LENGTH(S.IMDb) - 3) as DECIMAL(9,
     WHERE S.IMDb != 'nan' AND S.IMDb != '' AND S.RottenTomatoes != 'nan' AND S.RottenTomatoes != ''
     ORDER BY DiferencaAvaliacao DESC;
 ```
+> Filmes:
+![Avaliacoes IMDb/Rotten Tomatoes filmes](assets/Queries/difavaliacaofilmes.PNG)
+>
+> Series:
+![Avaliacoes IMDb/Rotten Tomatoes series](assets/Queries/difavaliacaoseries.PNG)
 
 #### Pergunta/Análise 7
 > * Existe alguma relação entre popularidade e exclusividade dos serviços de streaming?
@@ -517,6 +547,7 @@ SELECT AVG(Avaliacao) FROM allNetflix;
 SELECT AVG(Avaliacao) FROM allDisneyPlus;
 SELECT AVG(Avaliacao) FROM allOthers;
 ```
+![Popularidade e exclusividade](assets/Queries/popeexcservicos.PNG)
 
 #### Pergunta/Análise 8
 > * Qual a palavra mais utilizada em títulos?
@@ -540,6 +571,12 @@ GROUP BY Palavra
 ORDER BY Qtd DESC
 ```
 `SAÍDA`
+
+> Até 3 Letras:
+![Palavras com ate 3 letras](assets/Queries/palavrastitulos3.PNG)
+>
+> 4 Letras ou mais:
+![Palavras com 4 letras ou mais](assets/Queries/palavrastitulos4.PNG)
 
 > Vale ressaltar que, para responder a essa pergunta, precisamos criar uma nova tabela com as palavras separadas. Também precisamos tratá-las de forma que ficassem todas com letras minúsculas (de modo que 'Love' e 'love' contem como a mesma palavra) e retiramos possíveis dois pontos (':') do final de palavras (de mode que 'today:' e 'today' contem como a mesma palavra).
 > 
@@ -566,6 +603,12 @@ WHERE P.Titulo = G.Titulo
 GROUP BY Pais, Genero
 ORDER BY Pais, Qtd DESC
 ```
+> Analisando gênero por país:
+![Genero por pais](assets/Queries/paisgenerospais.PNG)
+
+>
+> Analisando país por gênero:
+![Pais por genero](assets/Queries/paisgenerosgeneros.PNG)
 
 > Produzimos duas tabelas diferentes para facilitar a visualização de acordo com o que se pretende, como ver qual o gênero mais comum da Alemanha ou saber em que países mais se produz filmes de Comédia. Através delas, podemos perceber que países mais afetados por guerras, como Afeganistão e Iraque, apresentam mais filmes do gênero 'War' e que países do Oeste Europeu se interessam mais em filmes de comédias do que do Leste.
 
@@ -577,6 +620,8 @@ FROM Generos
 GROUP BY Genero, Ano
 ORDER BY Ano, Qtd DESC
 ```
+
+![Generos mais populares ao longo dos anos](assets/Queries/generoano.PNG)
 
 > Apesar das poucas linhas de código, a análise dessa pergunta não foi tão fácil quanto esperado. No entanto, fomos capazes de notar a soberania dos gêneros 'Drama' e 'Comedy', sempre em primeiro e segundo lugar, respectivamente. Além disso, notamos como o gênero 'Action' passou por uma despopularização, aparecendo cada vez menos nos anos a partir de 2012, último ano em que apareceu como terceiro lugar no ranking. Em anos mais recentes, este gênero passou a ocupar quarto ou quinto lugar, chegando a sexto em 2021. Na contramão, vimos o gênero 'Documentary' crescer e se tornar mais relevante a cada ano, principalmente na década de 2010.
 
