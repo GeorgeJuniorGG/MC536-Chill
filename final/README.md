@@ -304,7 +304,7 @@ WHERE Pais NOT LIKE 'nan'
 GROUP BY Pais
 ORDER BY Qtd DESC
 ```
-![Filmes por pais](/assets/Queries/quantosfilmeseriepais.PNG)
+![Filmes por pais](assets/Queries/quantosfilmeseriepais.PNG)
 
 #### Pergunta/Análise 4
 > * Quais atores participaram de mais filmes?
@@ -796,10 +796,12 @@ GROUP BY Pais, Genero
 ORDER BY Pais, Qtd DESC
 ```
 > Analisando gênero por país:
+> 
 ![Genero por pais](assets/Queries/paisgenerospais.PNG)
 
 >
 > Analisando país por gênero:
+>
 ![Pais por genero](assets/Queries/paisgenerosgeneros.PNG)
 
 > Produzimos duas tabelas diferentes para facilitar a visualização de acordo com o que se pretende, como ver qual o gênero mais comum da Alemanha ou saber em que países mais se produz filmes de Comédia. Através delas, podemos perceber que países mais afetados por guerras, como Afeganistão e Iraque, apresentam mais filmes do gênero 'War' e que países do Oeste Europeu se interessam mais em filmes de comédias do que do Leste.
