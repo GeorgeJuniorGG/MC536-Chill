@@ -258,6 +258,8 @@ SELECT Genero, COUNT(Genero) AS Qtd
 > Netflix:
 ![Generos mais frequentes Netflix](assets/Queries/generosnetflix.PNG)
 
+> Conforme esperado, nota-se uma maior concentração de gêneros 'Family', 'Animation' e 'Fantasy', considerados infantis e mais adequados para programações em família, na plataforma Disney+. Além disso, na plataforma Netflix, nota-se um ranking bem próximo à concentração de gêneros por ano, que será visto na Pergunta 10.
+
 #### Pergunta/Análise 2
 > * Quais atores/diretores têm as melhores avaliações nos filmes em que participaram?
 ```
@@ -334,6 +336,8 @@ DROP VIEW mesNetflix;
 >
 > Netflix:
 ![Disponibilizacao de conteudo Netflix](assets/Queries/lancamentosmesnetflix.PNG)
+
+> Quanto aos lancamentos da Disney+, nota-se uma concentração no mês de novembro ('November'). Isso se deve ao fato de que o lançamento da plataforma ocorreu nesse mês (12 de novembro de 2019), acarretando no lançamento de todas mídias originalmente disponíveis nesse mês. Já em relação à Netflix, temos uma distribuição mais próxima de uniforme, apesar de ser possível perceber uma concentração nos meses de julho ('July'), dezembro ('December') e setembro ('September'), períodos de férias no Hemisfério Norte, em que as pessoas dispõem de mais tempo para assistir aos seus lançamentos.
 
 #### Pergunta/Análise 4
 > * Qual a distribuição estatística das avaliações das mídias?
@@ -483,6 +487,8 @@ DROP VIEW IF EXISTS ciSeries;
 > Series:
 ![Classificacao indicativa series](assets/Queries/clasindicativaseriesano.PNG)
 
+> Ao visualizar o resultado desta querie, notamos que o mercado de filmes e séries não segue uma ou mais gerações específicas e lida com seu envelhecimento. Ao contrário, essa indústria constantemente aposta na renovação de seus consumidores, continuando a produzir mídias livres para todos os públicos e também novas e diferentes mídias para jovens e adultos. Vale ressaltar, também, que essa análise requeriu que não considerássemos alguns anos da lista, visto que alguns possuem quantidade insuficiente de mídias para responder a pergunta.
+
 #### Pergunta/Análise 6
 > * Comparando as avaliações do Rotten Tomatoes e do IMDb, quais são as obras mais controversas?
   
@@ -552,6 +558,8 @@ SELECT AVG(Avaliacao) FROM allOthers;
 > Média DisneyPlus: 62.7385
 > 
 > Média outras: 57.9674
+
+> Com esta querie, consideramos as mídias presentes em apenas uma plataforma, seja ela Netflix, DisneyPlus ou outra (qualquer outra plataforma foi considerada no placar 'Média outras'). Com isso, pudemos calcular a média das avaliações do IMDb para os filmes e séries presentes exclusivamente em cada plataforma e, assim, notar que as mídias da DisneyPlus são as mais bem avaliadas das plataformas, com vantagem de aproximadamente 2,26 pontos sobre a Netflix, que, por sua vez, apresenta vantagem de aproximadamente 2,51 pontos sobre as demais plataformas. Esse resultado poderia, por exemplo, ser usado como propagando da DisneyPlus.
 
 #### Pergunta/Análise 8
 > * Qual a palavra mais utilizada em títulos?
