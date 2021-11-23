@@ -11,7 +11,7 @@
 > Com isso, pode-se responder a perguntas como quais filmes possuem as melhores (ou piores) avaliações, quanto tempo uma obra demora para ser lançada em uma dessas plataformas, entre outras. No entanto, devido a uma maior disponibilidade de dados sobre o conteúdo da Netflix e da Disney+, o projeto apresentará uma maior quantidade de informações sobre estas plataformas.
 
 ## Slides da Apresentação
-> [Slides](slides/previa.pdf)
+> [Slides](slides/final.pdf)
 
 ## Modelo Conceitual
 
@@ -167,7 +167,7 @@ Tabela | Tamanho Original (em MB) | Tamanho Final (em MB)
 > * Integração de dados dos datasets encontrados.
 > * Tratamento de dados faltante a partir da agregação de dados fragmentados obtidos pela API TMDb.
 > * Tratamento de dados após a agregação
-> * Transformação de dados na criação de tabelas para faciliar a criação dos grafos no Neo4j.
+> * Transformação de dados na criação de tabelas para facilitar a criação dos grafos no Neo4j.
 
 ## Evolução do Projeto
 
