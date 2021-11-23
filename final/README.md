@@ -521,7 +521,7 @@ SELECT AVG(Avaliacao) FROM allOthers;
 #### Pergunta/Análise 8
 > * Qual a palavra mais utilizada em títulos?
 
-* * Palavras com pelo menos 4 caracteres
+> * * Palavras com pelo menos 4 caracteres
 ```
 SELECT Palavra, COUNT(Palavra) AS Qtd
 FROM Palavras
@@ -531,7 +531,7 @@ ORDER BY Qtd DESC
 ```
 `SAÍDA`
 
-* * Palavras com no máximo 3 caracteres
+> * * Palavras com no máximo 3 caracteres
 ```
 SELECT Palavra, COUNT(Palavra) AS Qtd
 FROM Palavras
