@@ -548,7 +548,9 @@ SELECT AVG(Avaliacao) FROM allDisneyPlus;
 SELECT AVG(Avaliacao) FROM allOthers;
 ```
 > Média Netflix: 60.4750
+> 
 > Média DisneyPlus: 62.7385
+> 
 > Média outras: 57.9674
 
 #### Pergunta/Análise 8
