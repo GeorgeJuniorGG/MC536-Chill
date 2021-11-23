@@ -584,17 +584,17 @@ ORDER BY Qtd DESC
 #### Pergunta/Análise 1
 > * Dado que uma pessoa X trabalhou com uma pessoa Y e com uma pessoa Z, qual a chance de Y trabalhar com Z em um projeto futuro?
 >   
->   * Para responder esta pergunta, podemos fazer uma análise da modalidade predição de links que, com base nas conexões do grafo da Figura 3 (que relaciona pessoas pela obra trabalhada), atribui um valor de 0 a 1 que indica a probabilidade de essas pessoas trabalharem juntas no futuro.
+>   * Para responder esta pergunta, podemos fazer uma análise da modalidade predição de links que, com base nas conexões do grafo que contém a projeção de atores que já co-atuaram, atribui um valor de 0 a 1 que indica a probabilidade de essas pessoas trabalharem juntas no futuro.
 
 #### Pergunta/Análise 2
 > * Como podemos mapear a flexibilidade de atores e diretores quanto ao gênero da obra trabalhada?
 >   
->   * Para responder esta pergunta, podemos fazer uma análise de formação de comunidade a partir do grafo da Figura 4 (que relaciona pessoas pelo gênero da obra trabalhada). Com ele, podemos avaliar quais atores/diretores tendem a participar mais de obras de um determinado gênero a partir das comunidades formadas.
+>   * Para responder esta pergunta, podemos fazer uma análise de formação de comunidade a partir do grafo da projeção com relação ao gênero (que relaciona pessoas pelo gênero da obra trabalhada). Com ele, podemos avaliar quais atores/diretores tendem a participar mais de obras de um determinado gênero a partir das comunidades formadas.
 
 #### Pergunta/Análise 3
 > * Quais atores/diretores são mais populares no meio cinematográfico?
 >   
->   * Para responder esta pergunta, podemos fazer uma análise de centralidade a partir do grafo da Figura 3 (que relaciona pessoas com a obra trabalhada). Com ele, podemos criar um sistema que atribui um valor para cada pessoa com base no número de ligações com outras pessoas que essa pessoa possui. Além disso, podemos aplicar um peso ponderado para ligações com pessoas mais populares. A partir disso, poderemos atribuir um valor de popularidade para cada pessoa e ver quem são os atores/diretores mais centrais.
+>   * Para responder esta pergunta, podemos fazer uma análise de centralidade a partir do grafo da projeção de atores que já co-atuaram (que relaciona pessoas com a obra trabalhada). Com ele, podemos criar um sistema que atribui um valor para cada pessoa com base no número de ligações com outras pessoas que essa pessoa possui. Além disso, podemos aplicar um peso ponderado para ligações com pessoas mais populares. A partir disso, poderemos atribuir um valor de popularidade para cada pessoa e ver quem são os atores/diretores mais centrais.
 
 #### Pergunta/Análise 4
 > * Existe alguma relação entre duração e avaliação?
