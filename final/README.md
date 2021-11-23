@@ -712,4 +712,5 @@ ORDER BY Ano, Qtd DESC
 >   * Podemos analisar aspectos em comum dos filmes (como gênero, atores/diretores envolvidos, avaliação, entre outros) para propor outros filmes, possivelmente até com técnicas de machine learning.
 
 [Notebook com queries](notebooks/Queries.ipynb)
+
 [Markdown com queries em Cypher](src/CypherQueries.md)
