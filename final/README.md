@@ -547,7 +547,9 @@ SELECT AVG(Avaliacao) FROM allNetflix;
 SELECT AVG(Avaliacao) FROM allDisneyPlus;
 SELECT AVG(Avaliacao) FROM allOthers;
 ```
-![Popularidade e exclusividade](assets/Queries/popeexcservicos.PNG)
+> Média Netflix: 60.4750
+> Média DisneyPlus: 62.7385
+> Média outras: 57.9674
 
 #### Pergunta/Análise 8
 > * Qual a palavra mais utilizada em títulos?
